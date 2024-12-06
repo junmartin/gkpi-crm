@@ -91,7 +91,7 @@
 
 
 
-<h3>Listing</h3>
+<h3>Jemaat</h3>
 <form name="myForm" id="myForm" method="GET">
 <table border="1">
     <th style="text-align:left; width:50%;"><b>Filter</b> <a href="javascript:void(0)" onclick="uncheck_all();">[clear filter]</a></th>
@@ -140,9 +140,9 @@ $cityParams = explode('|', $_GET['city'] ?? '');
 
                 <!-- <input type="checkbox" class="refresh" name="show_spec" value="1" id="show_spec" <?php //echo (in_array('show_spec',$column_show)) ? 'checked' : '';?>>
                 <label for="show_spec">Specification</label><br> -->
-
+<!-- 
                 <input type="checkbox" class="refresh" name="show_owner" value="1" id="show_owner" <?php //echo (in_array('show_owner',$column_show)) ? 'checked' : '';?>>
-                <label for="show_owner">Owner</label>
+                <label for="show_owner">Owner</label> -->
             </td>
         </tr>
     </tbody>
@@ -157,7 +157,7 @@ $cityParams = explode('|', $_GET['city'] ?? '');
         <col width="8%" style="visibility:visible"> 
 
         <!-- For -->
-        <col width="5%" style="visibility:visible">
+        <col width="10%" style="visibility:visible">
 
         <!-- Address -->
         <col width="10%" style="visibility:visible">
@@ -173,130 +173,76 @@ $cityParams = explode('|', $_GET['city'] ?? '');
         
         <!-- <col width="7%" style="visibility:visible"> -->
         
-        <col width="27%" id="col_spec" style="visibility:visible">
+        <col width="10%" id="col_spec" style="visibility:visible">
     
         <col width="5%" id="col_vendor" style="visibility:visible">
         
-        <col width="4%" style="visibility:visible">
+        <col width="5%" style="visibility:visible">
         <col width="4%" style="visibility:visible">
     </colgroup>
     <thead>
         <tr>
             <!-- <th>Listing Date</th> -->
-            <th>Property & Location</th>            
-            <th>For</th>
-            <th>Address</th>
-            <th>Details</th>
-            <?php //if(in_array('show_add',$column_show)){?>
-                <th>Address</th>
-            <?php //} ?>
-            <th>Status</th>
+            <th>Nama</th>            
+            <th>Alamat</th>
+            <th>Tempat & Tgl Lahir</th>
             
-            <th>Price</th>
-            <!-- <th>Space</th> -->
-            <?php //if(in_array('show_spec',$column_show)){?>
-                <th>Specification</th>
-            <?php //} ?>
-            <?php //if(in_array('show_owner',$column_show)){?>
-                <th>Owner</th>
-            <?php //} ?>
-            <th>Progress</th>
+            <th>No HP</th>
+            
+            <th>Status Perkawinan</th>
+            <th>Nama Pasangan</th>
+            <th>Tgl Pernikahan</th>
+
+            <th>Gereja Asal</th>
+            <th>Status</th>
             <th>Action</th>
         </tr>
     </thead>
     <tbody>
         <!-- Example Data Row -->
 
-        @foreach($jemaats as $listing)
-
+        @foreach($jemaats as $jem)
+            <?php 
+                $kelamin = ($jem->jenis_kelamin == "0") ? "Laki-laki" : "Perempuan";
+                
+            ?>
             <tr style="vertical-align: top;" >
-                <!-- <td>{{$listing->listing_date}}</td> -->
+                <!-- <td>{{$jem->listing_date}}</td> -->
                 <td>             
                     <span class="top-left">
-                    <a href="{{ route('listing.edit', $listing->id)}}">
+                    <a href="{{ route('jemaat.edit', $jem->id)}}">
                     <span class="badge">
-                        <span class="badge-key">{{ucfirst($listing->propertyType->name)}}</span><span class="badge-value">{{$listing->city}}</span>
+                        <span class="badge-key">{{ucfirst($jem->name)}}</span><span class="badge-value">{{$kelamin}}</span>
                     </span>
                     </a>
                     </span><br>
-                    <span class="top-left" style="color:gray; float-right; vertical-align:bottom;"><em><small>Since:{{$listing->listing_date}}</small></em></span>
+                    <span class="top-left" style="color:gray; float-right; vertical-align:bottom;"></span>
                 </td>
                 
                 <td style="text-align:center;">
-                    <img src="https://img.shields.io/badge/Perempuan-pink">                    
+                    <!-- <img src="https://img.shields.io/badge/Perempuan-pink">                     -->
+                    {{$jem->address}}                    
                 </td>
-                <td style="font-size:small; line-height:1;">
-                    {{$listing->area}},&nbsp;&#128205;<em><a href="#">[Location]</a></em>
-                    <br>{{$listing->address}}
-                    <br><b>{{$listing->subdistrict}}, {{$listing->district}}</b>
-                    
-                </td>
-                <td style="font-size:small; line-height:1; justify-content: space-between;">
-                    <img src="https://img.shields.io/badge/Key-On Hand-olive">
-                    <img src="https://img.shields.io/badge/Banner-Put On-green">    
-                    <br>
-                    <div style="flex:1;">
-                    <?php if(!empty($listing_attr[$listing->id])){ ?>
-                        <?php 
-                            foreach($listing_attr[$listing->id] as $list_attr){                                    
-                                echo $prop_attr[$list_attr['proptype_attr_id']]['key'];
-                                echo ": ";
-                                if($prop_attr[$list_attr['proptype_attr_id']]['input_type'] == 'boolean'){
-                                    if($list_attr['value'] == 1){
-                                        $value = "Yes";
-                                    }elseif($list_attr['value'] == 0){
-                                        $value = "No";
-                                    }
-                                }else{
-                                    $value = $list_attr['value'];
-                                }
-                                echo "<b>".$value."</b>";
-                                echo "<br>";
-                            }
-                        ?>
-                    <?php } ?>
-                    </div>
-                    
-                </td>
-                <?php //if(in_array('show_add',$column_show)){?>
-                    <td>{{$listing->address}}<br><b>{{$listing->subdistrict}}, {{$listing->district}}</b></td>
-                <?php //} ?>
-
-                <!-- Status -->
-                <?php 
-                    $status = $listing->listing_status;
-                    $badge_color = $color[$listing->listing_status];
-                ?>
-                <td style="text-align:left;">
-                    <!-- <img src="https://img.shields.io/badge/Status-{{ucfirst($listing->listing_status)}}-{{$color[$listing->listing_status]}}"> -->
+                <td style="font-size:small; line-height:1;">                    
+                    {{$jem->birth_place}}, {{$jem->birth_date}}
                 </td>
                 
-                <td style="text-align:right;   padding-right: 10px;">
-                    <!-- <img src="https://img.shields.io/badge/Price-{{$price}}-blue" alt="Price"> -->
-                    <!-- <br><img src="https://img.shields.io/badge/Highest Bid-Rp2.5M-orange"> -->
-
-                </td>
-                <!-- <td style="text-align:right;">{{$listing->land_space}}</td> -->
-
-                <?php //if(in_array('show_spec',$column_show)){?>                    
-                    <td style="font-size:small; line-height:1;">{!!nl2br(str_replace(" ", " &nbsp;", $listing->specification))!!}</td>
-                <?php //} ?>
-                <?php //if(in_array('show_owner',$column_show)){?>
-                    <td>John Doe</td>
-                <?php //} ?>
+                <td>{{$jem->mobile_no}}</td>
+                <td>{{$jem->marital_status}}</td>
+                <td>{{$jem->spouse_name}}</td>
+                <td>{{$jem->marriage_date}}</td>
+                <td>{{$jem->previous_church}}</td>
+                
                 <td style="font-size:small; line-height:1;">
-                    <a href="#"><img src="https://img.shields.io/badge/Leads-12-blue" alt="Leads"></a>
+                    <a href="#"><img src="https://img.shields.io/badge/Baptis-{{$jem->baptise_status}}-blue" alt="Leads"></a>
                     <br>
-                    <a href="#"><img src="https://img.shields.io/badge/Inquiries-10-green" alt="Inquiries"></a>
-                    <!-- <br>
-                    <img src="https://img.shields.io/badge/Days%20Listed-45-yellow" alt="Days Listed"> -->
-                    
-
+                    <a href="#"><img src="https://img.shields.io/badge/Status-Jemaat_Tetap-green" alt="Inquiries"></a>
+                            
                 </td>
                 <td style="text-align:center;">
-                    <a href="{{ route('listing.edit', $listing->id)}}">View</a>
-                    <br><br><a href="{{ route('listing.edit', $listing->id)}}">Edit</a>
-                    <br><br><a href="{{ route('listing.edit', $listing->id)}}">Share</a>
+                    <a href="{{ route('jemaat.edit', $jem->id)}}">View</a>
+                    <br><br><a href="{{ route('jemaat.edit', $jem->id)}}">Edit</a>
+                    <br><br><a href="{{ route('jemaat.edit', $jem->id)}}">Share</a>
                 </td>
             </tr>
         @endforeach
