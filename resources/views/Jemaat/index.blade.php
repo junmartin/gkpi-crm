@@ -59,32 +59,49 @@
         background:#0F80c1;color:#fff;
         background: linear-gradient(#0e80c1, #0273B4);
     }    
+    .badge-value-primary{
+        border-bottom-right-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+        padding: 0.25rem 0.3rem;
+        background:#0F80c1;color:#fff;
+        background: linear-gradient(#0e80c1, #0273B4);
+    }    
+    .badge-value-danger{
+        border-bottom-right-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+        padding: 0.25rem 0.3rem;
+        background:#0F80c1;color:#fff;
+        background: linear-gradient(#c10e80, #B40273);
+    }    
 </style>
 
 <?php 
     // Initialize defaults
     $chk_appraisal = $chk_archived = $chk_listed = $chk_sold = "";
-    $chk_to_buy = $chk_to_rent = "";
+    $chk_lakilaki = $chk_perempuan = "";
     $chk_type = [];
     $chk_city = [];
+
+    // var_dump($param);
 
     // Check if there are parameters in the request
     // $chk_appraisal = (!empty($param['status_appraisal'])) ? 'checked' : '';
     // $chk_archived = (!empty($param['status_archived'])) ? 'checked' : '';
     // $chk_listed = (!empty($param['status_listed'])) ? 'checked' : '';
     // $chk_sold = (!empty($param['status_sold'])) ? 'checked' : '';
-    
-    // $chk_for_sell = (!empty($param['for_sell'])) ? 'checked' : '';
-    // $chk_for_rent = (!empty($param['for_rent'])) ? 'checked' : '';
+    // echo "<br>before:"; var_dump($chk_lakilaki);
+    $chk_lakilaki = (!empty($param['lakilaki'])) ? 'checked' : '';
+    $chk_perempuan = (!empty($param['perempuan'])) ? 'checked' : '';
+    // echo "<br>after:"; var_dump($chk_lakilaki);
     
     // foreach ($proptypes as $proptype) {
     //     // $chk_type[$proptype['name']] = in_array($proptype['name'], $paramType) ? "checked" : "";
     //     $chk_type[$proptype['name']] = (!empty($param['type_'.$proptype['name']])) ? "checked" : "";
     // }
-    
-    // foreach ($distinct_city as $city) {
-    //     $chk_city[str_replace(' ', '_', $city)] = (!empty($param['city_'.str_replace(' ', '_', $city)])) ? "checked" : "";
-    // }
+
+    foreach ($distinct_city as $city) {
+        $chk_city[str_replace(' ', '_', $city)] = (!empty($param['city_'.str_replace(' ', '_', $city)])) ? "checked" : "";
+    }
     
         
 ?>
@@ -108,7 +125,7 @@ $cityParams = explode('|', $_GET['city'] ?? '');
 
         <tr>
             <td style="vertical-align: top;">
-                Status:
+                <!-- Status:
                 <input type="checkbox" class="refresh" name="status_appraisal" value="1" id="appraisal" <?php //echo $chk_appraisal;?>>
                 <label for="appraisal">Appraisal</label>
 
@@ -120,15 +137,22 @@ $cityParams = explode('|', $_GET['city'] ?? '');
 
                 <input type="checkbox" class="refresh" name="status_sold" value="1" id="sold" <?php //echo $chk_sold;?>>
                 <label for="sold">Sold</label>
-                <br>
+                <br> -->
 
                 For:
-                <input type="checkbox" class="refresh" name="for_sell" value="1" id="to_buy" <?php //echo $chk_for_sell;?>>
-                <label for="to_buy">Sell</label>
+                <input type="checkbox" class="refresh" name="lakilaki" value="1" id="lakilaki" <?php echo $chk_lakilaki;?>>
+                <label for="lakilaki">Laki-laki</label>
 
-                <input type="checkbox" class="refresh" name="for_rent" value="1" id="to_rent" <?php //echo $chk_for_rent;?>>
-                <label for="to_rent">Rent</label>
+                <input type="checkbox" class="refresh" name="perempuan" value="1" id="perempuan" <?php echo $chk_perempuan;?>>
+                <label for="perempuan">Perempuan</label>
                 <br>
+
+                Tempat Lahir:
+                <?php foreach ($distinct_city as $city) { ?>
+                    <input type="checkbox" class="refresh" name="<?php echo "city_".str_replace(' ', '_', $city);?>" value="1" 
+                        id="<?php echo "city_".str_replace(' ', '_', $city);?>" <?php echo $chk_city[str_replace(' ', '_', $city)];?>>
+                    <label for="<?php echo "city_".str_replace(' ', '_', $city);?>"> <?php echo ucfirst($city); ?></label>
+                <?php } ?>
 
             </td>
             <td style="vertical-align: top;">
@@ -153,57 +177,79 @@ $cityParams = explode('|', $_GET['city'] ?? '');
 <a href="{{ route('jemaat.create')}}">[+ Add New]</a>
 <table border="1">
     <colgroup>
-        <!-- Property & Location -->
-        <col width="8%" style="visibility:visible"> 
+        <!-- Nama -->
+        <col width="10%" style="visibility:visible"> 
 
-        <!-- For -->
+        <!-- Tmpt & Tgl Lahir -->
         <col width="10%" style="visibility:visible">
 
         <!-- Address -->
         <col width="10%" style="visibility:visible">
 
-        <!-- Detail -->
+        <!-- HP -->
         <col width="10%" style="visibility:visible">
 
-        <!-- Status -->
+        <!-- Status Kawin -->
         <col width="5%" style="visibility:visible">
 
-        <!-- Price -->
+        <!-- Umur -->
         <col width="5%" style="visibility:visible">
-        
-        <!-- <col width="7%" style="visibility:visible"> -->
-        
+
+        <!-- Nama Pasangan -->
+        <col width="10%" style="visibility:visible">
+    
+        <!-- Tgl Kawin -->
         <col width="10%" id="col_spec" style="visibility:visible">
     
+        <!-- Gereja Asal -->
         <col width="5%" id="col_vendor" style="visibility:visible">
         
+        <!-- Keterangan -->
+        <col width="10%" style="visibility:visible">
+
         <col width="5%" style="visibility:visible">
-        <col width="4%" style="visibility:visible">
     </colgroup>
     <thead>
         <tr>
             <!-- <th>Listing Date</th> -->
             <th>Nama</th>            
-            <th>Alamat</th>
             <th>Tempat & Tgl Lahir</th>
+            <th>Alamat</th>
             
             <th>No HP</th>
             
             <th>Status Perkawinan</th>
+            <th>Usia</th>
             <th>Nama Pasangan</th>
             <th>Tgl Pernikahan</th>
 
             <th>Gereja Asal</th>
-            <th>Status</th>
+            <th>Keterangan</th>
             <th>Action</th>
         </tr>
     </thead>
     <tbody>
         <!-- Example Data Row -->
 
+        <?php 
+            $status_kawin = [];
+            $status_kawin['TK'] = "Tidak Kawin";
+            $status_kawin['K'] = "Kawin";
+            $status_kawin['M'] = "Meninggal";
+            $status_kawin['CM'] = "Cerai/Mati";
+            $status_kawin['CH'] = "Cerai/Hidup";
+        ?>
+
         @foreach($jemaats as $jem)
             <?php 
                 $kelamin = ($jem->jenis_kelamin == "0") ? "Laki-laki" : "Perempuan";
+                $badge_color = ($jem->jenis_kelamin == "0") ? "primary" : "danger";
+                
+                $birthDate = new DateTime($jem->birth_date);
+                $today = new DateTime(); // Gets the current date
+                $age = $today->diff($birthDate)->y; // Calculate the difference in years
+
+                $marriage_date = (!empty($jem->marriage_date)) ? date('d M Y',strtotime($jem->marriage_date)) : "";
                 
             ?>
             <tr style="vertical-align: top;" >
@@ -212,25 +258,20 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                     <span class="top-left">
                     <a href="{{ route('jemaat.edit', $jem->id)}}">
                     <span class="badge">
-                        <span class="badge-key">{{ucfirst($jem->name)}}</span><span class="badge-value">{{$kelamin}}</span>
+                        <span class="badge-key">{{ucfirst($jem->name)}}</span><span class="badge-value-{{$badge_color}}">{{$kelamin}}</span>
                     </span>
                     </a>
                     </span><br>
                     <span class="top-left" style="color:gray; float-right; vertical-align:bottom;"></span>
                 </td>
                 
-                <td style="text-align:center;">
-                    <!-- <img src="https://img.shields.io/badge/Perempuan-pink">                     -->
-                    {{$jem->address}}                    
-                </td>
-                <td style="font-size:small; line-height:1;">                    
-                    {{$jem->birth_place}}, {{$jem->birth_date}}
-                </td>
-                
+                <td>{{$jem->birth_place}}, {{date('d-M-Y',strtotime($jem->birth_date))}}</td>
+                <td>{{$jem->address}}</td>
                 <td>{{$jem->mobile_no}}</td>
-                <td>{{$jem->marital_status}}</td>
+                <td>{{$status_kawin[$jem->marital_status]}}</td>
+                <td>{{$age." tahun"}}</td>
                 <td>{{$jem->spouse_name}}</td>
-                <td>{{$jem->marriage_date}}</td>
+                <td>{{$marriage_date}}</td>
                 <td>{{$jem->previous_church}}</td>
                 
                 <td style="font-size:small; line-height:1;">
@@ -240,9 +281,8 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                             
                 </td>
                 <td style="text-align:center;">
-                    <a href="{{ route('jemaat.edit', $jem->id)}}">View</a>
-                    <br><br><a href="{{ route('jemaat.edit', $jem->id)}}">Edit</a>
-                    <br><br><a href="{{ route('jemaat.edit', $jem->id)}}">Share</a>
+                    <a href="{{ route('jemaat.edit', $jem->id)}}">[ View ]</a>
+                    <br><br><a href="{{ route('jemaat.edit', $jem->id)}}">[ Edit ]</a>
                 </td>
             </tr>
         @endforeach

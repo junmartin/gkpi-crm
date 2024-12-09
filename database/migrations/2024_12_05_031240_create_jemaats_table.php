@@ -16,16 +16,16 @@ return new class extends Migration
             $table->timestamps();
             $table->string('name');
             $table->tinyInteger('jenis_kelamin');
-            $table->string('address');
-            $table->string('birth_place');
-            $table->date('birth_date');
-            $table->string('mobile_no');
-            $table->string('email');
-            $table->string('marital_status');
-            $table->date('marriage_date');
-            $table->string('spouse_name');
-            $table->string('member_type');
-            $table->string('baptise_status');
+            $table->string('address')->nullable();
+            $table->string('birth_place')->nullable();
+            $table->date('birth_date')->nullable();
+            $table->string('mobile_no')->nullable();
+            $table->string('email')->nullable();
+            $table->string('marital_status')->nullable();
+            $table->date('marriage_date')->nullable();
+            $table->string('spouse_name')->nullable();
+            $table->string('member_type')->nullable();
+            $table->string('baptise_status')->nullable();
             $table->string('previous_church')->nullable();
             $table->string('remark')->nullable();
             

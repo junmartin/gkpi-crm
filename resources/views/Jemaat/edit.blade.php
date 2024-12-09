@@ -96,8 +96,9 @@
 <h3>Create New Jemaat</h3>
 
 
-<form action="{{ route('jemaat.store') }}" method="POST">
+<form action="{{ route('jemaat.update',$jemaat->id) }}" method="POST">
     @csrf
+    @method('PUT')
 
 <div style="width:100%; display:table;">
     <span style="float:left; width:33%">
@@ -113,44 +114,49 @@
                 <tr>
                     <td style="width:50%;">Nama</td>
                     <td style="width:50%;">
-                        <input type="text" id="name" name="name" maxlength="100" required>
+                        <input type="text" id="name" name="name" maxlength="100" required value="{{$jemaat->name}}">
                     </td>
                 </tr>
                 <tr>
                     <td>Jenis Kelamin</td>
+                    <?php 
+                    $chk_male = ''; $chk_female = '';
+                    $chk_male = ($jemaat['jenis_kelamin'] == 0 ) ? "checked" : "";
+                    $chk_female = ($jemaat['jenis_kelamin'] == 1 ) ? "checked" : "";
+                    ?>
                     <td>
-                        <input type="radio" id="jenis_kelamin" name="jenis_kelamin" value="0"> Laki-laki<br>
-                        <input type="radio" id="jenis_kelamin" name="jenis_kelamin" value="1"> Perempuan
+                        <input type="radio" id="jenis_kelamin" name="jenis_kelamin" value="0" {{$chk_male}}> Laki-laki<br>
+                        <input type="radio" id="jenis_kelamin" name="jenis_kelamin" value="1" {{$chk_female}}> Perempuan
                     </td>
                 </tr>
                 <tr>
                     <td>Alamat</td>
                     <td>
-                        <textarea rows="4" cols="50" style="width:100%" id="address" name="address" required></textarea>
+                        <textarea rows="4" cols="50" style="width:100%" id="address" name="address" required>{{$jemaat->address}}</textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>Tempat Lahir</td>
                     <td>
-                        <input type="text" id="birth_place" name="birth_place" maxlength="100" required>
+                        <input type="text" id="birth_place" name="birth_place" maxlength="100" required value="{{$jemaat->birth_place}}">
                     </td>
                 </tr>
                 <tr>
                     <td>Tanggal Lahir</td>
                     <td>
-                        <input type="date" id="birth_date" name="birth_date" maxlength="100" required>
+                        <input type="date" id="birth_date" name="birth_date" maxlength="100" required value="{{$jemaat->birth_date}}">
                     </td>
                 </tr>
                 <tr>
                     <td>No HP</td>
                     <td>
-                        <input type="text" id="mobile_no" name="mobile_no" maxlength="100" required>
+                        <input type="text" id="mobile_no" name="mobile_no" maxlength="100" required value="{{$jemaat->mobile_no}}">
                     </td>
                 </tr>
                 <tr>
                     <td>Email</td>
                     <td>
-                        <input type="text" id="email" name="email" maxlength="100">
+                        <input type="text" id="email" name="email" maxlength="100" value="{{$jemaat->email}}">
                     </td>
                 </tr>
             </tbody>
@@ -176,27 +182,36 @@
             </thead>
             <tbody>
                 <tr>
+                    <?php 
+                        $marital = [];
+                        $marital['TK'] = ($jemaat->marital_status == 'TK') ? 'selected' : '';
+                        $marital['K'] = ($jemaat->marital_status == 'K') ? 'selected' : '';
+                        $marital['M'] = ($jemaat->marital_status == 'M') ? 'selected' : '';
+                        $marital['CM'] = ($jemaat->marital_status == 'CM') ? 'selected' : '';
+                        $marital['CH'] = ($jemaat->marital_status == 'CH') ? 'selected' : '';
+                    ?>
+
                     <td>Status Perkawinan</td>
                     <td>
                         <select name="marital_status">
-                            <option value="TK"> Tidak Kawin</option>
-                            <option value="K"> Kawin</option>
-                            <option value="M"> Meninggal</option>
-                            <option value="CM"> Cerai/Mati</option>
-                            <option value="CH"> Cerai/Hidup</option>
+                            <option value="TK" <?php echo $marital['TK'];?>> Tidak Kawin</option>
+                            <option value="K" <?php echo $marital['K'];?>> Kawin</option>
+                            <option value="M" <?php echo $marital['M'];?>> Meninggal</option>
+                            <option value="CM" <?php echo $marital['CM'];?>> Cerai/Mati</option>
+                            <option value="CH" <?php echo $marital['CH'];?>> Cerai/Hidup</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td>Tanggal Pernikahan</td>
                     <td>
-                        <input type="date" id="marriage_date" name="marriage_date" maxlength="100" >
+                        <input type="date" id="marriage_date" name="marriage_date" maxlength="100" required value="{{$jemaat->marriage_date}}">
                     </td>
                 </tr>
                 <tr>
                     <td>Nama Pasangan</td>
                     <td>
-                        <input type="text" id="spouse_name" name="spouse_name" maxlength="100" >
+                        <input type="text" id="spouse_name" name="spouse_name" maxlength="100" required value="{{$jemaat->spouse_name}}">
                     </td>
                 </tr>
             </tbody>
@@ -231,23 +246,37 @@
             <tbody>
                 <tr>
                     <td>Status</td>
+                    <?php 
+                        $member['permanen'] = ($jemaat->member_type == 'permanen') ? 'selected' : '';
+                        $member['partisipan'] = ($jemaat->member_type == 'partisipan') ? 'selected' : '';
+
+                    ?>
                     <td colspan="2">
                         <select id="member_type" name="member_type" required>
-                            <option value="permanen">Jemaat Tetap</option>
-                            <option value="partisipan">Partisipan</option>
+                            <option value="permanen" <?php echo $member['permanen'];?> >Jemaat Tetap</option>
+                            <option value="partisipan" <?php echo $member['partisipan'];?> >Partisipan</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td>Status Baptis</td>
+                    <?php
+                        $baptis = [];
+                        $baptis['Baptis_Dewasa'] = ($jemaat->baptise_status == 'Baptis_Dewasa') ? "selected" : '';
+                        $baptis['Baptis_Anak'] = ($jemaat->baptise_status == 'Baptis_Anak') ? "selected" : '';
+                        $baptis['Sidi'] = ($jemaat->baptise_status == 'Sidi') ? "selected" : '';
+                        $baptis['Atestasi'] = ($jemaat->baptise_status == 'Atestasi') ? "selected" : '';
+                        $baptis['Belum_Baptis'] = ($jemaat->baptise_status == 'Belum_Baptis') ? "selected" : '';
+                        $baptis['Baptis_Gereja_Lain'] = ($jemaat->baptise_status == 'Baptis_Gereja_Lain') ? "selected" : '';
+                    ?>
                     <td colspan="2">
                         <select id="baptise_status" name="baptise_status" required>
-                            <option value="Baptis_Dewasa"> Baptis Dewasa</option>
-                            <option value="Baptis_Anak"> Baptis Anak</option>
-                            <option value="Sidi"> Sidi</option>
-                            <option value="Atestasi"> Atestasi</option>
-                            <option value="Belum_Baptis"> Belum Baptis</option>
-                            <option value="Baptis_Gereja_Lain"> Baptis Gereja Lain</option>
+                            <option value="Baptis_Dewasa" <?php echo $baptis['Baptis_Dewasa'];?>> Baptis Dewasa</option>
+                            <option value="Baptis_Anak" <?php echo $baptis['Baptis_Anak'];?>> Baptis Anak</option>
+                            <option value="Sidi" <?php echo $baptis['Sidi'];?>> Sidi</option>
+                            <option value="Atestasi" <?php echo $baptis['Atestasi'];?>> Atestasi</option>
+                            <option value="Belum_Baptis" <?php echo $baptis['Belum_Baptis'];?>> Belum Baptis</option>
+                            <option value="Baptis_Gereja_Lain" <?php echo $baptis['Baptis_Gereja_Lain'];?>> Baptis Gereja Lain</option>
                         </select>
                     </td>
                 </tr>
