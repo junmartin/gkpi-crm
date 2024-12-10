@@ -23,6 +23,7 @@ class Jemaat extends Model
         'member_type',
         'baptise_status',
         'previous_church',
-        'remark'
+        'remark',
+        'pass_photo'
     ];
 }

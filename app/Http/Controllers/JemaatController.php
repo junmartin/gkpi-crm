@@ -7,6 +7,10 @@ use App\Models\Jemaat;
 
 use Illuminate\Database\Eloquent\Builder;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+
 class JemaatController extends Controller
 {
     /**
@@ -75,25 +79,52 @@ class JemaatController extends Controller
     public function store(Request $request)
     {
         // dd($request);
+        $validator = Validator::make($request->all(), [
+            'pass_photo' => 'max:2048',
+            'pass_photo.*' => 'file|mimes:jpg,jpeg,png,mp4,avi,mov',
+        ]);
 
-        $jemaat = [
-            "name" => $request['name'],
-            "jenis_kelamin" => $request['jenis_kelamin'],
-            "address" => $request['address'],
-            "birth_place" => $request['birth_place'],
-            "birth_date" => $request['birth_date'],
-            "mobile_no" => $request['mobile_no'],
-            "email" => $request['email'],
-            "marital_status" => $request['marital_status'],
-            "marriage_date" => $request['marriage_date'],
-            "spouse_name" => $request['spouse_name'],
-            "member_type" => $request['member_type'],
-            "baptise_status" => $request['baptise_status'],
-            "previous_church" => $request['previous_church'],
-            "remark" => $request['remark']
-        ];
-        Jemaat::create($jemaat);
-        return redirect()->route('jemaat.index')->with('success','Data Jemaat Berhasil Masuk.');
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $filePath = "";
+            if($request->hasFile('pass_photo')) {
+                $filePath = 'jemaat/file/' . $request->file('pass_photo')->getClientOriginalName();
+                Storage::disk('public')->put($filePath,file_get_contents($request->file('pass_photo')));
+            }
+            $jemaat = [
+                "name" => $request['name'],
+                "jenis_kelamin" => $request['jenis_kelamin'],
+                "address" => $request['address'],
+                "birth_place" => $request['birth_place'],
+                "birth_date" => $request['birth_date'],
+                "mobile_no" => $request['mobile_no'],
+                "email" => $request['email'],
+                "marital_status" => $request['marital_status'],
+                "marriage_date" => $request['marriage_date'],
+                "spouse_name" => $request['spouse_name'],
+                "member_type" => $request['member_type'],
+                "baptise_status" => $request['baptise_status'],
+                "previous_church" => $request['previous_church'],
+                "remark" => $request['remark'],
+                "pass_photo" => $filePath
+            ];
+            Jemaat::create($jemaat);
+
+            DB::commit();
+            Log::info('Data saved');
+            
+            return redirect()->route('jemaat.index')->with('success','Data Jemaat Berhasil Masuk.');
+
+        } catch (Exception $e){
+            Log::info($e);
+            DB::rollback();
+            return redirect()->route('jemaat.index')->with('error','Data Jemaat Gagal Masuk.');
+        }
     }
 
     /**
@@ -119,28 +150,62 @@ class JemaatController extends Controller
     public function update(Request $request, string $id)
     {
         // dd($request);
+        $validator = Validator::make($request->all(), [
+            'pass_photo' => 'max:2048',
+            'pass_photo.*' => 'file|mimes:jpg,jpeg,png,mp4,avi,mov',
+        ]);
 
-        $jemaat_updated = [
-            "name" => $request['name'],
-            "jenis_kelamin" => $request['jenis_kelamin'],
-            "address" => $request['address'],
-            "birth_place" => $request['birth_place'],
-            "birth_date" => $request['birth_date'],
-            "mobile_no" => $request['mobile_no'],
-            "email" => $request['email'],
-            "marital_status" => $request['marital_status'],
-            "marriage_date" => $request['marriage_date'],
-            "spouse_name" => $request['spouse_name'],
-            "member_type" => $request['member_type'],
-            "baptise_status" => $request['baptise_status'],
-            "previous_church" => $request['previous_church'],
-            "remark" => $request['remark']
-        ];
-        
-        $jemaat = Jemaat::findOrFail($id);
-        $jemaat->update($jemaat_updated);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
-        return redirect()->route('jemaat.index')->with('success','Data Jemaat Berhasil Diubah.');
+
+        try {
+            DB::beginTransaction();
+            $filePath = "";
+            // if($request->hasFile('pass_photo')) {
+            //     $filePath = 'jemaat/file/' . $request->file('pass_photo')->getClientOriginalName();
+            //     Storage::disk('public')->put($filePath, file_get_contents($request->file('pass_photo')));
+            // }
+    
+            $jemaat_updated = [
+                "name" => $request['name'],
+                "jenis_kelamin" => $request['jenis_kelamin'],
+                "address" => $request['address'],
+                "birth_place" => $request['birth_place'],
+                "birth_date" => $request['birth_date'],
+                "mobile_no" => $request['mobile_no'],
+                "email" => $request['email'],
+                "marital_status" => $request['marital_status'],
+                "marriage_date" => $request['marriage_date'],
+                "spouse_name" => $request['spouse_name'],
+                "member_type" => $request['member_type'],
+                "baptise_status" => $request['baptise_status'],
+                "previous_church" => $request['previous_church'],
+                "remark" => $request['remark'],
+                
+            ];
+            
+            $jemaat = Jemaat::findOrFail($id);
+            $jemaat->update($jemaat_updated);
+
+
+            if($request->hasFile('pass_photo')){
+                $filePath = 'jemaat/file/' . $request->file('pass_photo')->getClientOriginalName();
+                Storage::disk('public')->put($filePath, file_get_contents($request->file('pass_photo')));
+
+                $jemaat_foto = ["pass_photo" => $filePath];
+                $jemaat_2 = Jemaat::findOrFail($id);
+                $jemaat_2->update($jemaat_foto);
+            }
+            
+            DB::commit();
+            return redirect()->route('jemaat.index')->with('success','Data Jemaat Berhasil Diubah.');
+        } catch (Exception $e) {
+            Log::info($e);
+            DB::rollback();
+            return redirect()->route('jemaat.index')->with('error','Data Jemaat Gagal Diubah.');
+        }
     }
 
     /**

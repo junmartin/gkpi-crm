@@ -96,8 +96,18 @@
 <h3>Create New Jemaat</h3>
 
 
-<form action="{{ route('jemaat.store') }}" method="POST">
+<form action="{{ route('jemaat.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
+
+    @if ($errors->any())
+    <div style="color: red;">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }} eargaer</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 
 <div style="width:100%; display:table;">
     <span style="float:left; width:33%">
@@ -154,18 +164,21 @@
                     </td>
                 </tr>
             </tbody>
-            <!-- <thead>
+            <thead>
                 <th colspan="2">Media</th>
             </thead>
             <tbody>
                 <tr>
-                    <td>Files</td>
+                    <td>Pas Foto</td>
                     <td>
-                        <input type="file" id="property_media" name="property_media" multiple > 
+                        <input type="file" id="pass_photo" name="pass_photo" accept=".jpg,.jpeg,.png,.mp4,.avi,.mov">
+                        <span id="error_message_media" style="color: red;"></span>
+                        <ul id="file_list" style="list-style: none; padding: 0;"></ul>
+                        
                     </td>
                 </tr>
             
-            </tbody> -->
+            </tbody>
 
         </table>
     </span>
@@ -272,4 +285,8 @@
 </div>
 </form>
 
+@endsection
+
+@section('script')
+<script src="{{ asset('assets/js/add_jemaat.js') }}?v={{time()}}"></script>
 @endsection

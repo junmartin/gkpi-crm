@@ -178,7 +178,7 @@ $cityParams = explode('|', $_GET['city'] ?? '');
 <table border="1">
     <colgroup>
         <!-- Nama -->
-        <col width="10%" style="visibility:visible"> 
+        <col width="15%" style="visibility:visible"> 
 
         <!-- Tmpt & Tgl Lahir -->
         <col width="10%" style="visibility:visible">
@@ -250,16 +250,19 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                 $age = $today->diff($birthDate)->y; // Calculate the difference in years
 
                 $marriage_date = (!empty($jem->marriage_date)) ? date('d M Y',strtotime($jem->marriage_date)) : "";
+
+                $pass_photo = ($jem->pass_photo != "") ? $jem->pass_photo : "jemaat/file/no-image.jpg";
                 
             ?>
             <tr style="vertical-align: top;" >
                 <!-- <td>{{$jem->listing_date}}</td> -->
                 <td>             
                     <span class="top-left">
-                    <a href="{{ route('jemaat.edit', $jem->id)}}">
-                    <span class="badge">
-                        <span class="badge-key">{{ucfirst($jem->name)}}</span><span class="badge-value-{{$badge_color}}">{{$kelamin}}</span>
-                    </span>
+                    <a href="{{ route('jemaat.edit', $jem->id)}}" style="text-decoration:none;">
+                        <img src="{{ $pass_photo }}" width="30px" />
+                        <span class="badge">
+                            <span class="badge-key">{{ucfirst($jem->name)}}</span><span class="badge-value-{{$badge_color}}">{{$kelamin}}</span>
+                        </span>
                     </a>
                     </span><br>
                     <span class="top-left" style="color:gray; float-right; vertical-align:bottom;"></span>

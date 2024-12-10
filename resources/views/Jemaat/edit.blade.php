@@ -96,9 +96,19 @@
 <h3>Create New Jemaat</h3>
 
 
-<form action="{{ route('jemaat.update',$jemaat->id) }}" method="POST">
+<form action="{{ route('jemaat.update',$jemaat->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
+
+    @if ($errors->any())
+    <div style="color: red;">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }} eargaer</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 
 <div style="width:100%; display:table;">
     <span style="float:left; width:33%">
@@ -160,18 +170,27 @@
                     </td>
                 </tr>
             </tbody>
-            <!-- <thead>
+            <thead>
                 <th colspan="2">Media</th>
             </thead>
             <tbody>
                 <tr>
-                    <td>Files</td>
+                    <td>Pas Foto</td>
                     <td>
-                        <input type="file" id="property_media" name="property_media" multiple > 
+                        <input type="file" id="pass_photo" name="pass_photo" accept=".jpg,.jpeg,.png,.mp4,.avi,.mov">
+                        <span id="error_message_media" style="color: red;"></span>
+                        <ul id="file_list" style="list-style: none; padding: 0;"></ul>
+                        <ol>
+                            <li>
+                                <a href="{{ Storage::url($jemaat->pass_photo) }}" target="_blank">
+                                {{ basename($jemaat->pass_photo) }}<br>
+                                </a>
+                            </li>
+                        </ol>
                     </td>
                 </tr>
             
-            </tbody> -->
+            </tbody>
 
         </table>
     </span>
@@ -205,13 +224,13 @@
                 <tr>
                     <td>Tanggal Pernikahan</td>
                     <td>
-                        <input type="date" id="marriage_date" name="marriage_date" maxlength="100" required value="{{$jemaat->marriage_date}}">
+                        <input type="date" id="marriage_date" name="marriage_date" maxlength="100" value="{{$jemaat->marriage_date}}">
                     </td>
                 </tr>
                 <tr>
                     <td>Nama Pasangan</td>
                     <td>
-                        <input type="text" id="spouse_name" name="spouse_name" maxlength="100" required value="{{$jemaat->spouse_name}}">
+                        <input type="text" id="spouse_name" name="spouse_name" maxlength="100" value="{{$jemaat->spouse_name}}">
                     </td>
                 </tr>
             </tbody>
@@ -301,4 +320,8 @@
 </div>
 </form>
 
+@endsection
+
+@section('script')
+    <script src="{{ asset('assets/js/edit_jemaat.js') }}?v={{ time() }}"></script>
 @endsection
