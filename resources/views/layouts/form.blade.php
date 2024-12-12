@@ -15,7 +15,7 @@
         <div>            
             <b>Menu : </b>
             <a href="{{ route('jemaat.index')}}">Jemaat</a> |
-            <a href="">People</a> |
+            <a href="{{ route('family.index')}}">Family</a> |
             <a href="">Marketing</a>
             <br>
         </div>

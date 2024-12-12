@@ -234,6 +234,19 @@
                     </td>
                 </tr>
             </tbody>
+
+            <thead>
+                <th colspan="2">Family</th>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td>Assign to Family</td>
+                    <td>
+                        <a href="{{route('assign_family',$jemaat->id)}}"> Assign Family </a>
+                    </td>
+                </tr>
+            </tbody>
         </table>        
     </span>
 

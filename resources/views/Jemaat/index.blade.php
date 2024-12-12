@@ -174,6 +174,24 @@ $cityParams = explode('|', $_GET['city'] ?? '');
 
 </form>
 
+
+<!-- <div style="border: 1px blue solid; display:table;">
+    <span style="width: 50%; float:left;">
+        &nbsp;1st
+        <br><br><br><br>
+    </span>
+    <span style="width: 50%; float:left;">
+        <span style="border: 1px black solid;">
+            &nbsp;2nd
+        </span>
+        <span style="border: 1px red solid;">
+            &nbsp;3rd
+        </span>
+    </span>
+</div>
+<br> -->
+
+
 <a href="{{ route('jemaat.create')}}">[+ Add New]</a>
 <table border="1">
     <colgroup>
@@ -193,7 +211,7 @@ $cityParams = explode('|', $_GET['city'] ?? '');
         <col width="5%" style="visibility:visible">
 
         <!-- Umur -->
-        <col width="5%" style="visibility:visible">
+        <!-- <col width="5%" style="visibility:visible"> -->
 
         <!-- Nama Pasangan -->
         <col width="10%" style="visibility:visible">
@@ -219,7 +237,7 @@ $cityParams = explode('|', $_GET['city'] ?? '');
             <th>No HP</th>
             
             <th>Status Perkawinan</th>
-            <th>Usia</th>
+            <!-- <th>Usia</th> -->
             <th>Nama Pasangan</th>
             <th>Tgl Pernikahan</th>
 
@@ -242,7 +260,7 @@ $cityParams = explode('|', $_GET['city'] ?? '');
 
         @foreach($jemaats as $jem)
             <?php 
-                $kelamin = ($jem->jenis_kelamin == "0") ? "Laki-laki" : "Perempuan";
+                $kelamin = ($jem->jenis_kelamin == "0") ? "L" : "P";
                 $badge_color = ($jem->jenis_kelamin == "0") ? "primary" : "danger";
                 
                 $birthDate = new DateTime($jem->birth_date);
@@ -256,23 +274,55 @@ $cityParams = explode('|', $_GET['city'] ?? '');
             ?>
             <tr style="vertical-align: top;" >
                 <!-- <td>{{$jem->listing_date}}</td> -->
-                <td>             
-                    <span class="top-left">
+                <td>       
+                    <!-- original -->
+                    <!-- <span class="top-left">
                     <a href="{{ route('jemaat.edit', $jem->id)}}" style="text-decoration:none;">
-                        <img src="{{ $pass_photo }}" width="30px" />
-                        <span class="badge">
-                            <span class="badge-key">{{ucfirst($jem->name)}}</span><span class="badge-value-{{$badge_color}}">{{$kelamin}}</span>
+                        <img src="{{ $pass_photo }}" width="40px" />
+                        <span class="badge" style="vertical-align:top;margin-top:5px;">
+                            <span class="badge-key">{{$kelamin}}</span><span class="badge-value-{{$badge_color}}">{{$jem->name}}</span>
                         </span>
                     </a>
                     </span><br>
-                    <span class="top-left" style="color:gray; float-right; vertical-align:bottom;"></span>
+                    <span class="top-left" style="color:gray; float-right; vertical-align:bottom;"></span> -->
+                    <!-- original -->
+
+                    <!-- <div style="display:table; width:100%;">
+                        <span style="background-color:blue; padding:5px; ">
+                            <img src="{{ $pass_photo }}" width="40px" />
+                        </span>
+                        <span style="background-color:red; padding:5px;">
+                            <span class="badge" style="vertical-align:top; margin-top:5px;">
+                                <span class="badge-key">{{$kelamin}}</span><span class="badge-value-{{$badge_color}}">{{$jem->name}}</span>
+                            </span>                            
+                            <span>
+                                {{$age." tahun"}}
+                            </span>
+                        </span>
+                    </div> -->
+
+                    <table style="border:0px;">
+                        <tr style="height:20px;">
+                            <td rowspan="2" style="vertical-align:top; width:45px;">
+                                <img src="{{ asset($pass_photo) }}" width="40px" />
+                            </td>
+                            <td>
+                                <span class="badge" style="vertical-align:top; margin-top:5px;">
+                                    <span class="badge-key">{{$kelamin}}</span><span class="badge-value-{{$badge_color}}">{{$jem->name}}</span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr style="height:20px;">
+                            <td style="vertical-align:top;">{{$age." tahun"}}</td>
+                        </tr>
+                    </table>
                 </td>
                 
                 <td>{{$jem->birth_place}}, {{date('d-M-Y',strtotime($jem->birth_date))}}</td>
                 <td>{{$jem->address}}</td>
                 <td>{{$jem->mobile_no}}</td>
                 <td>{{$status_kawin[$jem->marital_status]}}</td>
-                <td>{{$age." tahun"}}</td>
+                <!-- <td>{{$age." tahun"}}</td> -->
                 <td>{{$jem->spouse_name}}</td>
                 <td>{{$marriage_date}}</td>
                 <td>{{$jem->previous_church}}</td>

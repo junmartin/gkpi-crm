@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('jemaats', function (Blueprint $table) {
-            $table->string('pass_photo',500);
+        Schema::table('family_detail', function (Blueprint $table) {
+            $table->string('role');
         });
-        
-        
     }
 
     /**
@@ -23,8 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('jemaats', function (Blueprint $table) {
-            $table->dropColumn('pass_photo');
+        Schema::table('family_detail', function (Blueprint $table) {
+            $table->dropColumn('role');
         });
+        
     }
 };

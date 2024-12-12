@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('jemaats', function (Blueprint $table) {
-            $table->string('pass_photo',500);
+        Schema::create('family', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->string('family_name');
         });
-        
-        
     }
 
     /**
@@ -23,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('jemaats', function (Blueprint $table) {
-            $table->dropColumn('pass_photo');
-        });
+        Schema::dropIfExists('family');
     }
 };
