@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Family;
+use App\Models\FamilyDetail;
 
 use Illuminate\Database\Eloquent\Builder;
 
@@ -70,6 +71,16 @@ class FamilyController extends Controller
      */
     public function edit(Family $family)
     {
+        // echo $family->id; exit();
+
+        // dd($family->people);
+
+
+
+        // $personnels = FamilyDetail::where('family_id',$family->id)->get();
+
+        // $anggota = $family->people;
+        // var_dump($anggota); exit();
         return view('Family/edit',compact('family'));
     }
 

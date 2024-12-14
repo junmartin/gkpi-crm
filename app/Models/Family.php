@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+ 
 
 class Family extends Model
 {
@@ -14,5 +16,13 @@ class Family extends Model
         return $this->hasMany(Jemaat::class);
     }
 
-    
+    function familyDetails(){
+        return $this->hasMany(FamilyDetail::class);
+    }    
+
+    function people(): BelongsToMany
+    {
+        return $this->belongsToMany(Jemaat::class,'family_detail')->withPivot('role')->orderByPivot('role','desc');
+    }
+
 }

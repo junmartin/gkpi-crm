@@ -23,7 +23,7 @@
         <table border="1" width="100%">
             
             <thead>
-                <th colspan="2">Personal Info</th>
+                <th colspan="2">Family</th>
             </thead>
             <tbody>                
                 <tr>
@@ -33,9 +33,33 @@
                     </td>
                 </tr>
             </tbody>
+
+            <thead>
+                <th colspan="2">Current Personnel</th>
+            </thead>
+            <tbody> 
+                @foreach($family->people as $people)
+                <tr>
+                    <td style="width:50%;">
+                        {{$people['name']}}
+                    </td>
+                    <td style="width:50%;">
+                        {{$people['pivot']['role']}}
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
         </table>
     </span>
 </div>
+
+<?php 
+// echo '<pre>';
+// var_dump($family->people[0]['name']);
+// var_dump($family->people[0]['pivot']['role']);
+// // var_dump($family->people);
+// echo '</pre>';
+?>
 
 <div style="text-align:right;">
     <input type="reset" value="Reset" >
