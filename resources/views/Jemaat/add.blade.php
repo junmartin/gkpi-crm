@@ -134,12 +134,6 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Alamat</td>
-                    <td>
-                        <textarea rows="4" cols="50" style="width:100%" id="address" name="address" required></textarea>
-                    </td>
-                </tr>
-                <tr>
                     <td>Tempat Lahir</td>
                     <td>
                         <input type="text" id="birth_place" name="birth_place" maxlength="100" required>
@@ -149,6 +143,12 @@
                     <td>Tanggal Lahir</td>
                     <td>
                         <input type="date" id="birth_date" name="birth_date" maxlength="100" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Alamat</td>
+                    <td>
+                        <textarea rows="4" cols="50" style="width:100%" id="address" name="address" required></textarea>
                     </td>
                 </tr>
                 <tr>

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Attendance;
+
 class Jemaat extends Model
 {
     use HasFactory;
@@ -26,4 +28,9 @@ class Jemaat extends Model
         'remark',
         'pass_photo'
     ];
+
+    function attendance() : HasMany {  
+        return $this->hasMany(Attendance::class);
+        
+    }
 }

@@ -16,7 +16,8 @@
             <b>Menu : </b>
             <a href="{{ route('jemaat.index')}}">Jemaat</a> |
             <a href="{{ route('family.index')}}">Family</a> |
-            <a href="">Marketing</a>
+            <a href="{{ route('ibadah.index')}}">Ibadah</a> |
+            <a href="">Kehadiran</a>
             <br>
         </div>
     </div>

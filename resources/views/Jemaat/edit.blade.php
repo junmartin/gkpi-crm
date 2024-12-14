@@ -93,7 +93,7 @@
 </script>
 
 
-<h3>Create New Jemaat</h3>
+<h3>Edit Jemaat</h3>
 
 
 <form action="{{ route('jemaat.update',$jemaat->id) }}" method="POST" enctype="multipart/form-data">
@@ -140,12 +140,6 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Alamat</td>
-                    <td>
-                        <textarea rows="4" cols="50" style="width:100%" id="address" name="address" required>{{$jemaat->address}}</textarea>
-                    </td>
-                </tr>
-                <tr>
                     <td>Tempat Lahir</td>
                     <td>
                         <input type="text" id="birth_place" name="birth_place" maxlength="100" required value="{{$jemaat->birth_place}}">
@@ -155,6 +149,12 @@
                     <td>Tanggal Lahir</td>
                     <td>
                         <input type="date" id="birth_date" name="birth_date" maxlength="100" required value="{{$jemaat->birth_date}}">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Alamat</td>
+                    <td>
+                        <textarea rows="4" cols="50" style="width:100%" id="address" name="address" required>{{$jemaat->address}}</textarea>
                     </td>
                 </tr>
                 <tr>

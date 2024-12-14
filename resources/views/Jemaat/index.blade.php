@@ -304,12 +304,16 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                     <table style="border:0px;">
                         <tr style="height:20px;">
                             <td rowspan="2" style="vertical-align:top; width:45px;">
-                                <img src="{{ asset($pass_photo) }}" width="40px" />
+                                <a href="{{ route('jemaat.edit', $jem->id)}}" style="text-decoration:none;">
+                                    <img src="{{ asset($pass_photo) }}" width="40px" />
+                                </a>
                             </td>
                             <td>
-                                <span class="badge" style="vertical-align:top; margin-top:5px;">
-                                    <span class="badge-key">{{$kelamin}}</span><span class="badge-value-{{$badge_color}}">{{$jem->name}}</span>
-                                </span>
+                                <a href="{{ route('jemaat.edit', $jem->id)}}" style="text-decoration:none;">
+                                    <span class="badge" style="vertical-align:top; margin-top:5px;">
+                                        <span class="badge-key">{{$kelamin}}</span><span class="badge-value-{{$badge_color}}">{{$jem->name}}</span>
+                                    </span>
+                                </a>
                             </td>
                         </tr>
                         <tr style="height:20px;">

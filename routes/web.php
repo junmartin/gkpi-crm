@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JemaatController;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\FamilyDetailController;
+use App\Http\Controllers\IbadahController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,6 +28,7 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('jemaat',JemaatController::class)->middleware(['auth','verified']);
 Route::resource('family',FamilyController::class)->middleware(['auth','verified']);
+Route::resource('ibadah',IbadahController::class)->middleware(['auth','verified']);
 Route::get('/jemaat/{jemaat_id}/assign_family', [FamilyDetailController::class,'show'])->middleware(['auth','verified'])->name('assign_family');
 Route::post('/jemaat/{jemaat_id}/assign_family', [FamilyDetailController::class,'update'])->middleware(['auth','verified'])->name('assign_family.submit');
 
