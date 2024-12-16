@@ -17,7 +17,7 @@
             <a href="{{ route('jemaat.index')}}">Jemaat</a> |
             <a href="{{ route('family.index')}}">Family</a> |
             <a href="{{ route('ibadah.index')}}">Ibadah</a> |
-            <a href="">Kehadiran</a>
+            <a href="{{ route('attendance.index')}}">Kehadiran</a> |
             <br>
         </div>
     </div>

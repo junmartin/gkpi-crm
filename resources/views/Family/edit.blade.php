@@ -77,7 +77,7 @@
             </thead>
             <tbody>                
                 <tr>
-                    <td style="width:50%;">Nama Keluarga</td>
+                    <td style="width:50%;text-align:right;">Nama Keluarga</td>
                     <td style="width:50%;">
                         <input type="text" id="family_name" name="family_name" maxlength="100" value="{{$family->family_name}}" required>
                     </td>
@@ -99,7 +99,7 @@
                 ?>
                 
                 <tr>
-                    <td style="width:50%;">
+                    <td style="width:50%;text-align:right;">
                         {{$people['pivot']['role']}}
                     </td>
                     <td style="width:50%;">

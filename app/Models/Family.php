@@ -25,4 +25,9 @@ class Family extends Model
         return $this->belongsToMany(Jemaat::class,'family_detail')->withPivot('role')->orderByPivot('role','desc');
     }
 
+    public function countPeople()
+    {
+        return $this->people()->count();
+    }
+
 }

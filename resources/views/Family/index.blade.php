@@ -17,12 +17,11 @@
     <tbody>
         @foreach($families as $fam)
             <tr>
-                <td>{{$fam->family_name}}</td>
-                <td>-</td>
+                <td style="vertical-align:top">{{$fam->family_name}}</td>
+                <td style="vertical-align:top">{{$fam->countPeople()}} orang.</td>
                 <td>-</td>
                 <td style="text-align:center;">
-                    <a href="{{ route('family.edit', $fam->id)}}">[ View ]</a>
-                    <br><br><a href="{{ route('family.edit', $fam->id)}}">[ Edit ]</a>
+                    <a href="{{ route('family.edit', $fam->id)}}">[ Edit ]</a>
                 </td>
 
             </tr>
