@@ -2,7 +2,7 @@
 
 @section('content')
 
-<h3>Create New Family</h3>
+<h3>Create Ibadah</h3>
 
 <form action="{{ route('ibadah.store') }}" method="POST" enctype="multipart/form-data">
     @csrf

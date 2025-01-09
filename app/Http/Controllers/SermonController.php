@@ -33,10 +33,11 @@ class SermonController extends Controller
      */
     public function create()
     {
+        $ibadah = Ibadah::get();
         $jemaats = Jemaat::get();
-        return view('Sermon/add',compact('jemaats'));
+        return view('Sermon/add',compact('jemaats','ibadah'));
     }
-
+    
     /**
      * Store a newly created resource in storage.
      */
@@ -53,7 +54,7 @@ class SermonController extends Controller
                 'ibadah_name' => $request['ibadah_name']
             ];
             $sermon = Sermon::create($serm);
-
+            
             // INSERT SERMON ATTENDANCE
             $attd = [];
             foreach($request['jemaat'] as $jem){
@@ -64,7 +65,7 @@ class SermonController extends Controller
                 ];
                 SermonAttendance::create($attd);
             }
-
+            
             DB::commit();
             Log::info('Data saved');
             
@@ -75,7 +76,7 @@ class SermonController extends Controller
             return redirect()->route('sermon.index')->with('error','Data Attendance Gagal Masuk.');
         }
     }
-
+    
     /**
      * Display the specified resource.
      */

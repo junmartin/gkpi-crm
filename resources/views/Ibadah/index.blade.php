@@ -19,8 +19,7 @@
                 <td>{{$i->ibadah_name}}</td>
                 <td>{{$i->remark}}</td>
                 <td style="text-align:center;">
-                    <a href="{{ route('ibadah.edit', $i->id)}}">[ View ]</a>
-                    <br><br><a href="{{ route('ibadah.edit', $i->id)}}">[ Edit ]</a>
+                    <a href="{{ route('ibadah.edit', $i->id)}}">[ Edit ]</a>
                 </td>
 
             </tr>

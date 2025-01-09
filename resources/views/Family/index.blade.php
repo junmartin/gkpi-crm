@@ -8,8 +8,8 @@
 <table border="1">
     <thead>
         <tr>
-            <th>Nama</th>
-            <th>Anggota Keluarga</th>
+            <th>Nama Keluarga</th>
+            <th>Jumlah Anggota</th>
             <th>Catatan</th>
             <th>Action</th>
         <tr>

@@ -36,13 +36,18 @@
                 <tr>
                     <td style="width:50%;">Date</td>
                     <td style="width:50%;">
-                        <input type="date" id="sermon_date" name="sermon_date" required>
+                        <input type="date" id="sermon_date" name="sermon_date" required value="{{date('Y-m-d')}}">
                     </td>
                 </tr>
                 <tr>
                     <td style="width:50%;">Tipe Ibadah</td>
                     <td style="width:50%;">
-                        <input type="text" id="ibadah_id" name="ibadah_id" value="1">
+                        <!-- <input type="text" id="ibadah_id" name="ibadah_id" value="1"> -->
+                        <select name="ibadah_id" id="ibadah_id">
+                            <?php foreach ($ibadah as $i=>$ibd) { ?>
+                                <option value="{{$ibd['id']}}"> {{$ibd['ibadah_name']}} </option>
+                            <?php } ?>
+                        </select>
                     </td>
                 </tr>
                 <tr>

@@ -38,5 +38,5 @@ Route::post('/attendance/{sermon_date}/{ibadah_id}', [AttendanceController::clas
 Route::get('/jemaat/{jemaat_id}/assign_family', [FamilyDetailController::class,'show'])->middleware(['auth','verified'])->name('assign_family');
 Route::post('/jemaat/{jemaat_id}/assign_family', [FamilyDetailController::class,'update'])->middleware(['auth','verified'])->name('assign_family.submit');
 
-
+Route::get('/template', [JemaatController::class,'template'])->middleware(['auth','verified']);
 require __DIR__.'/auth.php';

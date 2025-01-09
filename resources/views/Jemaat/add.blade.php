@@ -127,6 +127,12 @@
                     </td>
                 </tr>
                 <tr>
+                    <td style="width:50%;">Nama Panggilan</td>
+                    <td style="width:50%;">
+                        <input type="text" id="nick_name" name="nick_name" maxlength="100" >
+                    </td>
+                </tr>
+                <tr>
                     <td>Jenis Kelamin</td>
                     <td>
                         <input type="radio" id="jenis_kelamin" name="jenis_kelamin" value="0"> Laki-laki<br>

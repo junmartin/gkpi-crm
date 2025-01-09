@@ -128,6 +128,12 @@
                     </td>
                 </tr>
                 <tr>
+                    <td style="width:50%;">Nama Panggilan</td>
+                    <td style="width:50%;">
+                        <input type="text" id="nick_name" name="nick_name" maxlength="100" value="{{$jemaat->nick_name}}">
+                    </td>
+                </tr>
+                <tr>
                     <td>Jenis Kelamin</td>
                     <?php 
                     $chk_male = ''; $chk_female = '';
@@ -234,7 +240,7 @@
                     </td>
                 </tr>
             </tbody>
-
+            <!-- <tr><td colspan="2" style="border:0px;">&nbsp;</td></tr> -->
             <thead>
                 <th colspan="2">Family</th>
             </thead>
@@ -243,9 +249,34 @@
                 <tr>
                     <td>Assign to Family</td>
                     <td>
-                        <a href="{{route('assign_family',$jemaat->id)}}"> Assign Family </a>
+                        <!-- <a href="{{route('assign_family',$jemaat->id)}}"> Assign Family </a> -->
+
+                        <select name="family_id" id="family_id">
+                        <option value=""> N/A
+                        @foreach($family as $fam)
+                            <?php $sel = ($fam['id'] == $jemaat->family_id) ? "selected" : "";?>
+                            <option value="{{$fam->id}}" {{$sel}}> {{$fam->family_name}}
+                        @endforeach
+                        </select>
                     </td>
                 </tr>
+                <tr>
+                    <td>Role</td>
+                    <td>
+                        <select name="role" id="role">
+                            <option value="N/A"> N/A
+                            <?php if($jemaat['jenis_kelamin'] == 0) {?>
+                                <option value="Suami" <?php echo ($jemaat->role == "Suami") ? "selected" :"";?>> Suami
+                            <?php } ?>
+
+                            <?php if($jemaat['jenis_kelamin'] == 1) {?>
+                                <option value="Istri" <?php echo ($jemaat->role == "Istri") ? "selected" :"";?>> Istri
+                            <?php } ?>
+
+                            <option value="Anak" <?php echo ($jemaat->role == "Anak") ? "selected" :"";?>> Anak
+                        </select>
+                    </td>
+                </tr
             </tbody>
         </table>        
     </span>
@@ -328,7 +359,7 @@
     </span>
 </div>
 <div style="text-align:right;">
-    <input type="reset" value="Reset" >
+    <!-- <input type="reset" value="Reset" > -->
     <input type="submit" value="Submit" >
 </div>
 </form>

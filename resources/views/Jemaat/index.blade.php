@@ -82,31 +82,22 @@
     $chk_type = [];
     $chk_city = [];
 
-    // var_dump($param);
 
-    // Check if there are parameters in the request
-    // $chk_appraisal = (!empty($param['status_appraisal'])) ? 'checked' : '';
-    // $chk_archived = (!empty($param['status_archived'])) ? 'checked' : '';
-    // $chk_listed = (!empty($param['status_listed'])) ? 'checked' : '';
-    // $chk_sold = (!empty($param['status_sold'])) ? 'checked' : '';
-    // echo "<br>before:"; var_dump($chk_lakilaki);
     $chk_lakilaki = (!empty($param['lakilaki'])) ? 'checked' : '';
     $chk_perempuan = (!empty($param['perempuan'])) ? 'checked' : '';
-    // echo "<br>after:"; var_dump($chk_lakilaki);
-    
-    // foreach ($proptypes as $proptype) {
-    //     // $chk_type[$proptype['name']] = in_array($proptype['name'], $paramType) ? "checked" : "";
-    //     $chk_type[$proptype['name']] = (!empty($param['type_'.$proptype['name']])) ? "checked" : "";
-    // }
 
     foreach ($distinct_city as $city) {
         $chk_city[str_replace(' ', '_', $city)] = (!empty($param['city_'.str_replace(' ', '_', $city)])) ? "checked" : "";
-    }
-    
-        
+    }      
+
+    foreach ($distinct_status as $status) {
+        $chk_status[str_replace(' ', '_', $status)] = (!empty($param['status_'.str_replace(' ', '_', $status)])) ? "checked" : "";
+    }      
+
+    foreach ($distinct_baptise as $baptise) {
+        $chk_baptise[str_replace(' ', '_', $baptise)] = (!empty($param['baptise_'.str_replace(' ', '_', $baptise)])) ? "checked" : "";
+    }      
 ?>
-
-
 
 <h3>Jemaat</h3>
 <form name="myForm" id="myForm" method="GET">
@@ -125,26 +116,29 @@ $cityParams = explode('|', $_GET['city'] ?? '');
 
         <tr>
             <td style="vertical-align: top;">
-                <!-- Status:
-                <input type="checkbox" class="refresh" name="status_appraisal" value="1" id="appraisal" <?php //echo $chk_appraisal;?>>
-                <label for="appraisal">Appraisal</label>
 
-                <input type="checkbox" class="refresh" name="status_archived" value="1" id="archived" <?php //echo $chk_archived;?>>
-                <label for="archived">Archived</label>
-
-                <input type="checkbox" class="refresh" name="status_listed" value="1" id="listed" <?php //echo $chk_listed;?>>
-                <label for="listed">Listed</label>
-
-                <input type="checkbox" class="refresh" name="status_sold" value="1" id="sold" <?php //echo $chk_sold;?>>
-                <label for="sold">Sold</label>
-                <br> -->
-
-                For:
+                Jenis Kelamin:
                 <input type="checkbox" class="refresh" name="lakilaki" value="1" id="lakilaki" <?php echo $chk_lakilaki;?>>
                 <label for="lakilaki">Laki-laki</label>
 
                 <input type="checkbox" class="refresh" name="perempuan" value="1" id="perempuan" <?php echo $chk_perempuan;?>>
                 <label for="perempuan">Perempuan</label>
+                <br>
+
+                Status:
+                <?php foreach ($distinct_status as $status) { ?>
+                    <input type="checkbox" class="refresh" name="<?php echo "status_".str_replace(' ', '_', $status);?>" value="1" 
+                        id="<?php echo "status_".str_replace(' ', '_', $status);?>" <?php echo $chk_status[str_replace(' ', '_', $status)];?>>
+                    <label for="<?php echo "status_".str_replace(' ', '_', $status);?>"> <?php echo ucfirst($status); ?></label>
+                <?php } ?>
+                <br>
+
+                Baptis:
+                <?php foreach ($distinct_baptise as $baptise) { ?>
+                    <input type="checkbox" class="refresh" name="<?php echo "baptise_".str_replace(' ', '_', $baptise);?>" value="1" 
+                        id="<?php echo "baptise_".str_replace(' ', '_', $baptise);?>" <?php echo $chk_baptise[str_replace(' ', '_', $baptise)];?>>
+                    <label for="<?php echo "baptise_".str_replace(' ', '_', $baptise);?>"> <?php echo ucfirst($baptise); ?></label>
+                <?php } ?>
                 <br>
 
                 Tempat Lahir:
@@ -173,24 +167,6 @@ $cityParams = explode('|', $_GET['city'] ?? '');
 </table>
 
 </form>
-
-
-<!-- <div style="border: 1px blue solid; display:table;">
-    <span style="width: 50%; float:left;">
-        &nbsp;1st
-        <br><br><br><br>
-    </span>
-    <span style="width: 50%; float:left;">
-        <span style="border: 1px black solid;">
-            &nbsp;2nd
-        </span>
-        <span style="border: 1px red solid;">
-            &nbsp;3rd
-        </span>
-    </span>
-</div>
-<br> -->
-
 
 <a href="{{ route('jemaat.create')}}">[+ Add New]</a>
 <table border="1">
@@ -232,16 +208,14 @@ $cityParams = explode('|', $_GET['city'] ?? '');
             <!-- <th>Listing Date</th> -->
             <th>Nama</th>            
             <th>Tempat & Tgl Lahir</th>
-            <th>Alamat</th>
-            
-            <th>No HP</th>
-            
-            <th>Status Perkawinan</th>
-            <!-- <th>Usia</th> -->
+            <th>Kontak</th>
+            <th>Alamat</th>            
+            <th>Keluarga</th>
+            <!-- <th>Status Perkawinan</th>
             <th>Nama Pasangan</th>
-            <th>Tgl Pernikahan</th>
+            <th>Tgl Pernikahan</th> -->
 
-            <th>Gereja Asal</th>
+            <!-- <th>Gereja Asal</th> -->
             <th>Keterangan</th>
             <th>Action</th>
         </tr>
@@ -272,35 +246,8 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                 $pass_photo = ($jem->pass_photo != "") ? $jem->pass_photo : "jemaat/file/no-image.jpg";
                 
             ?>
-            <tr style="vertical-align: top;" >
-                <!-- <td>{{$jem->listing_date}}</td> -->
-                <td>       
-                    <!-- original -->
-                    <!-- <span class="top-left">
-                    <a href="{{ route('jemaat.edit', $jem->id)}}" style="text-decoration:none;">
-                        <img src="{{ $pass_photo }}" width="40px" />
-                        <span class="badge" style="vertical-align:top;margin-top:5px;">
-                            <span class="badge-key">{{$kelamin}}</span><span class="badge-value-{{$badge_color}}">{{$jem->name}}</span>
-                        </span>
-                    </a>
-                    </span><br>
-                    <span class="top-left" style="color:gray; float-right; vertical-align:bottom;"></span> -->
-                    <!-- original -->
-
-                    <!-- <div style="display:table; width:100%;">
-                        <span style="background-color:blue; padding:5px; ">
-                            <img src="{{ $pass_photo }}" width="40px" />
-                        </span>
-                        <span style="background-color:red; padding:5px;">
-                            <span class="badge" style="vertical-align:top; margin-top:5px;">
-                                <span class="badge-key">{{$kelamin}}</span><span class="badge-value-{{$badge_color}}">{{$jem->name}}</span>
-                            </span>                            
-                            <span>
-                                {{$age." tahun"}}
-                            </span>
-                        </span>
-                    </div> -->
-
+            <tr style="vertical-align: top; height:60px;" >
+                <td>
                     <table style="border:0px;">
                         <tr style="height:20px;">
                             <td rowspan="2" style="vertical-align:top; width:45px;">
@@ -312,6 +259,8 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                                 <a href="{{ route('jemaat.edit', $jem->id)}}" style="text-decoration:none;">
                                     <span class="badge" style="vertical-align:top; margin-top:5px;">
                                         <span class="badge-key">{{$kelamin}}</span><span class="badge-value-{{$badge_color}}">{{$jem->name}}</span>
+                                        <!-- <span class="badge-key">{{$jem->name}}</span><span class="badge-value-{{$badge_color}}">{{$jem->nick_name}}</span> -->
+                                        <!-- <span class="badge-key">{{$age. "thn"}}</span><span class="badge-value-{{$badge_color}}">{{$jem->name}}</span> -->
                                     </span>
                                 </a>
                             </td>
@@ -323,18 +272,27 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                 </td>
                 
                 <td>{{$jem->birth_place}}, {{date('d-M-Y',strtotime($jem->birth_date))}}</td>
+                <td>{{$jem->mobile_no}}<br>{{$jem->email}}</td>
                 <td>{{$jem->address}}</td>
-                <td>{{$jem->mobile_no}}</td>
-                <td>{{$status_kawin[$jem->marital_status]}}</td>
+                <!-- <td>{{$status_kawin[$jem->marital_status]}}</td> -->
                 <!-- <td>{{$age." tahun"}}</td> -->
-                <td>{{$jem->spouse_name}}</td>
+                <!-- <td>{{$jem->spouse_name}}</td>
                 <td>{{$marriage_date}}</td>
-                <td>{{$jem->previous_church}}</td>
+                <td>{{$jem->previous_church}}</td> -->
+
+                <td>
+                    {{$jem->family->family_name ?? '-'}}
+                    <!-- <img src="https://img.shields.io/badge/Baptis-{{$jem->baptise_status}}-blue" alt="Keluarga"> -->
+                </td>
+                <!-- <td>{{$jem->previous_church}}</td>  -->
+
                 
                 <td style="font-size:small; line-height:1;">
+                    <a href="#"><img src="https://img.shields.io/badge/Status-Jemaat_Tetap-green" alt="Inquiries"></a>
+                    <br>
                     <a href="#"><img src="https://img.shields.io/badge/Baptis-{{$jem->baptise_status}}-blue" alt="Leads"></a>
                     <br>
-                    <a href="#"><img src="https://img.shields.io/badge/Status-Jemaat_Tetap-green" alt="Inquiries"></a>
+                    <?php echo (!empty($jem->previous_church)) ? "Gereja Asal: ".$jem->previous_church : "";?>
                             
                 </td>
                 <td style="text-align:center;">

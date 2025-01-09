@@ -85,7 +85,7 @@
             </tbody>
 
             <thead>
-                <th colspan="2">Current Personnel</th>
+                <th colspan="2">Family Member</th>
             </thead>
             <tbody> 
                 <?php foreach ($family->people as $people){
