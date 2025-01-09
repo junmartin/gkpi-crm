@@ -18,6 +18,8 @@
             <a href="{{ route('family.index')}}">Family</a> |
             <a href="{{ route('ibadah.index')}}">Ibadah</a> |
             <a href="{{ route('sermon.index')}}">Kehadiran</a> |
+            <a href="{{ route('asset_type.index')}}">Tipe Asset</a> |
+            <a href="{{ route('asset.index')}}">Asset</a> |
             <br>
         </div>
     </div>

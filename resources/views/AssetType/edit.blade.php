@@ -2,10 +2,11 @@
 
 @section('content')
 
-<h3>Create New Family</h3>
+<h3>Update Asset Type</h3>
 
-<form action="{{ route('family.store') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('asset_type.update',$assetType->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
+    @method('PUT')
 
     @if ($errors->any())
     <div style="color: red;">
@@ -22,13 +23,13 @@
         <table border="1" width="100%">
             
             <thead>
-                <th colspan="2">Personal Info</th>
+                <th colspan="2">Asset Type Info</th>
             </thead>
             <tbody>                
                 <tr>
-                    <td style="width:50%;">Nama Keluarga</td>
+                    <td style="width:50%;">Nama</td>
                     <td style="width:50%;">
-                        <input type="text" id="family_name" name="family_name" maxlength="100" required>
+                        <input type="text" id="name" name="name" maxlength="100" value="{{$assetType->name}}" required>
                     </td>
                 </tr>
             </tbody>
