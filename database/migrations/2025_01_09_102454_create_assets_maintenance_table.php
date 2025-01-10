@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreign('asset_id')->references('id')->on('assets');
             $table->string('maint_type');
             $table->date('maint_date');
-            $table->date('next_maint_date');
+            $table->date('next_maint_date')->nullable();
             $table->string('maint_title');
             $table->string('desc')->nullable();
             $table->double('maint_fee');

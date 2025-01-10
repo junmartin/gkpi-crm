@@ -23,4 +23,8 @@ class Asset extends Model
     public function asset_type() {
         return $this->belongsTo(AssetType::class, 'type_id');
     }
+
+    public function maintenance() {
+        return $this->hasMany(AssetMaintenance::class);
+    }
 }

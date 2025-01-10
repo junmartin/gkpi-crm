@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Asset;
 use App\Models\AssetType;
+use App\Models\AssetMaint;
 use Illuminate\Http\Request;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -78,7 +79,9 @@ class AssetController extends Controller
     public function edit(Asset $asset)
     {
         $asset_type = AssetType::get();
-        return view('Asset/edit', compact('asset','asset_type'));
+        $maints = AssetMaint::where('asset_id',$asset->id)->get();
+
+        return view('Asset/edit', compact('asset','asset_type','maints'));
     }
 
     /**

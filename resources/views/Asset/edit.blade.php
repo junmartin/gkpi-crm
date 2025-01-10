@@ -18,7 +18,7 @@
     </div>
     @endif
 
-<div style="width:100%; display:table;">
+<div style="width:100%; display:table; overflow-y:auto;">
     <span style="float:left; width:33%">
         <table border="1" width="100%">
             
@@ -77,6 +77,33 @@
                     <td style="width:50%;">Spesifikasi</td>
                     <td style="width:50%;">
                         <textarea rows="4" cols="50" style="width:100%" id="spec" name="spec">{{$asset->spec}}</textarea>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </span>
+    <span style="float:left; width:33%; max-height:300px">
+        <table border="1" width="100%" style="">
+            
+            <thead>
+                <th>Service / Maintenance Log</th>
+            </thead>
+            <tbody>                
+                <tr>
+                    <td height="300" style="vertical-align:top;">
+                        <span style=" max-height: 300px; overflow-y:scroll">
+                        Recent Services:<br>
+                        
+                        <ul>
+                            @foreach ($maints as $m)
+                            <li>
+                                <a href="{{route('asset_maint.edit',$m->id)}}">
+                                {{$m->maint_date}} - {{$m->maint_title}}
+                                </a>
+                            </li>
+                            @endforeach
+                            
+                        </ul>
                     </td>
                 </tr>
             </tbody>

@@ -20,6 +20,7 @@
             <a href="{{ route('sermon.index')}}">Kehadiran</a> |
             <a href="{{ route('asset_type.index')}}">Tipe Asset</a> |
             <a href="{{ route('asset.index')}}">Asset</a> |
+            <a href="{{ route('asset_maint.index')}}">Asset Maintenance</a> |
             <br>
         </div>
     </div>

@@ -2,8 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asset;
+use App\Models\AssetType;
 use App\Models\AssetMaint;
 use Illuminate\Http\Request;
+
+use Illuminate\Database\Eloquent\Builder;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+
 
 class AssetMaintController extends Controller
 {
@@ -12,7 +22,8 @@ class AssetMaintController extends Controller
      */
     public function index()
     {
-        //
+        $maints = AssetMaint::with('asset')->get();
+        return view('AssetMaint/index',compact('maints'));
     }
 
     /**
@@ -20,7 +31,8 @@ class AssetMaintController extends Controller
      */
     public function create()
     {
-        //
+        $asset = Asset::get();
+        return view('AssetMaint/add',compact('asset'));
     }
 
     /**
@@ -28,7 +40,31 @@ class AssetMaintController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request);
+        try {
+            DB::beginTransaction();
+            
+            $asset = [                
+                'asset_id' => $request['asset_id'],
+                'maint_type' => $request['maint_type'],
+                'maint_date' => $request['maint_date'],
+                'next_maint_date' => $request['next_maint_date'],
+                'maint_title' => $request['maint_title'],
+                'desc' => $request['desc'],
+                'maint_fee' => $request['maint_fee'],
+                'remark' => $request['remark'],
+            ];
+            AssetMaint::create($asset);
+
+            DB::commit();
+            Log::info('Data saved');
+            
+            return redirect()->route('asset_maint.index')->with('success','Data Asset Maintenance Berhasil Masuk.');
+        } catch (Exception $e) {
+            Log::info($e);
+            DB::rollback();
+            return redirect()->route('asset_maint.index')->with('error','Data Asset Maintenance Gagal Masuk.');
+        }
     }
 
     /**
@@ -44,7 +80,8 @@ class AssetMaintController extends Controller
      */
     public function edit(AssetMaint $assetMaint)
     {
-        //
+        $asset = Asset::get();
+        return view('AssetMaint/edit', compact('assetMaint','asset'));
     }
 
     /**
