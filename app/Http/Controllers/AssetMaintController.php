@@ -89,7 +89,32 @@ class AssetMaintController extends Controller
      */
     public function update(Request $request, AssetMaint $assetMaint)
     {
-        //
+        try {
+            DB::beginTransaction();
+            
+            $asset = [                
+                'asset_id' => $request['asset_id'],
+                'maint_type' => $request['maint_type'],
+                'maint_date' => $request['maint_date'],
+                'next_maint_date' => $request['next_maint_date'],
+                'maint_title' => $request['maint_title'],
+                'desc' => $request['desc'],
+                'maint_fee' => $request['maint_fee'],
+                'remark' => $request['remark'],
+            ];
+            
+            $post = AssetMaint::findOrFail($assetMaint['id']);
+            $post->update($asset);
+
+            DB::commit();
+            Log::info('Data updated');
+            
+            return redirect()->route('asset_maint.index')->with('success','Data Asset Maintenance Berhasil Diubah.');
+        } catch (Exception $e) {
+            Log::info($e);
+            DB::rollback();
+            return redirect()->route('asset_maint.index')->with('error','Data Asset Maintenance Gagal Diubah.');
+        }
     }
 
     /**

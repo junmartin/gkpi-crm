@@ -27,7 +27,7 @@ class Family extends Model
 
     public function countPeople()
     {
-        return $this->people()->count();
+        return $this->jemaat()->count();
     }
 
 }

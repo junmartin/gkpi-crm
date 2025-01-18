@@ -88,7 +88,7 @@
                 <th colspan="2">Family Member</th>
             </thead>
             <tbody> 
-                <?php foreach ($family->people as $people){
+                <?php foreach ($personnels as $people){
 
                     $pass_photo = ($people['pass_photo'] != "") ? $people['pass_photo'] : "jemaat/file/no-image.jpg";
                     $kelamin = ($people['jenis_kelamin'] == "0") ? "L" : "P";
@@ -100,7 +100,7 @@
                 
                 <tr>
                     <td style="width:50%;text-align:right;">
-                        {{$people['pivot']['role']}}
+                        {{$people->role}}
                     </td>
                     <td style="width:50%;">
                         <table style="border:0px;">
@@ -119,12 +119,6 @@
                             </tr>
                         </table>
                     </td>
-                    <!-- <td style="width:50%;">
-                        {{$people['name']}}
-                    </td>
-                    <td style="width:50%;">
-                        {{$people['pivot']['role']}}
-                    </td> -->
                 </tr>
 
                 <?php } ?>
@@ -133,16 +127,8 @@
     </span>
 </div>
 
-<?php 
-// echo '<pre>';
-// var_dump($family->people[0]['name']);
-// var_dump($family->people[0]['pivot']['role']);
-// // var_dump($family->people);
-// echo '</pre>';
-?>
-
 <div style="text-align:right;">
-    <input type="reset" value="Reset" >
+    <!-- <input type="reset" value="Reset" > -->
     <input type="submit" value="Submit" >
 </div>
 </form>

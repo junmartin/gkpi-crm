@@ -44,4 +44,24 @@ class Jemaat extends Model
     public function family() {
         return $this->belongsTo(Family::class, 'family_id');
     }
+
+    public function scopeGroupByGender($query)
+    {
+        return $query->selectRaw('jenis_kelamin, COUNT(*) as total')
+            ->groupBy('jenis_kelamin');
+    }
+
+    public function scopeGroupByAgeCategory($query)
+    {
+        return $query->selectRaw("
+                CASE 
+                    WHEN TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) BETWEEN 0 AND 14 THEN 'Sekolah Minggu'
+                    WHEN TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) BETWEEN 15 AND 30 THEN 'Pemuda'
+                    WHEN TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) BETWEEN 31 AND 60 THEN 'Dewasa'
+                    ELSE 'Lansia'
+                END as age_category,
+                COUNT(*) as total
+            ")
+            ->groupBy('age_category');
+    }
 }

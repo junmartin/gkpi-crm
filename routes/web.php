@@ -14,12 +14,22 @@ use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AssetMaintController;
 
 
+use App\Models\SermonAttendance;
+use App\Models\Sermon;
+use App\Models\Jemaat;
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
+Route::get('/dashboard', function () { 
+    $numberOfSermons = 10; // Define how many sermons back to display
+    $attd = Sermon::withAttendance($numberOfSermons)->get();
+
+    $jemaat_by_gender = Jemaat::GroupByGender()->get();
+    $jemaat_by_age = Jemaat::groupByAgeCategory()->get();
+
+    return view('dashboard',compact('attd','jemaat_by_gender','jemaat_by_age'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

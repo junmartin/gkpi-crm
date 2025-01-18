@@ -4,7 +4,7 @@
 
 <h3>Update New Asset</h3>
 
-<form action="{{ route('asset_maint.store') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('asset_maint.update', $assetMaint->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
 

@@ -14,7 +14,7 @@
     }
 
     td {
-        padding:5px 2px;
+        padding:3px 3px;
         /* padding: 10px; */
     }
 
@@ -82,8 +82,9 @@
 <table border="1">
     <thead>
         <tr>
-            <th>Jenis</th>
-            <th>Nama</th>
+            <th>Asset</th>
+            <th>Merk</th>
+            <th>Model</th>
             <th>Tipe</th>
             <th>Tanggal Perolehan</th>
             <th>Serial No.</th>
@@ -94,29 +95,22 @@
     <tbody>
         @foreach($assets as $ast)
             <tr>
-                <td style="vertical-align:top">{{$ast->asset_type->name}}</td>
+                <!-- <td style="vertical-align:top">{{$ast->asset_type->name}}</td> -->
                 <td style="vertical-align:top">
                     <table style="border:0px;">
                         <tr style="height:20px;">
-                            <!-- <td rowspan="2" style="vertical-align:top; width:45px;">
-                                <a href="{{ route('asset.edit', $ast->id)}}" style="text-decoration:none;">
-                                    
-                                </a>
-                            </td> -->
                             <td style="vertical-align:top;">
-                                <b>{{$ast->name}}</b><br>
                                 <a href="{{ route('asset.edit', $ast->id)}}" style="text-decoration:none;">
                                     <span class="badge" style="vertical-align:top; margin-top:5px;">
-                                        <span class="badge-key">{{$ast->merk}}</span><span class="badge-value-primary">{{$ast->model}}</span>
+                                        <span class="badge-key">{{$ast->asset_type->name}}</span><span class="badge-value-primary">{{$ast->name}}</span>
                                     </span>
                                 </a>
                             </td>
                         </tr>
-                        <!-- <tr style="height:20px;">
-                            <td style="vertical-align:top;">Tipe: {{$ast->tipe}}</td>
-                        </tr> -->
                     </table>
                 </td>
+                <td style="vertical-align:top;">{{$ast->merk}}</td>
+                <td style="vertical-align:top;">{{$ast->model}}</td>
                 <td style="vertical-align:top;">{{$ast->tipe}}</td>
                 <td style="vertical-align:top">{{$ast->acquired_date}}</td>
                 <td style="vertical-align:top">{{$ast->serial_number}}</td>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Family;
 use App\Models\FamilyDetail;
+use App\Models\Jemaat;
 
 use Illuminate\Database\Eloquent\Builder;
 
@@ -77,11 +78,11 @@ class FamilyController extends Controller
 
 
 
-        // $personnels = FamilyDetail::where('family_id',$family->id)->get();
+        $personnels = Jemaat::where('family_id',$family->id)->get();
 
         // $anggota = $family->people;
         // var_dump($anggota); exit();
-        return view('Family/edit',compact('family'));
+        return view('Family/edit',compact('family','personnels'));
     }
 
     /**

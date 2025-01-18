@@ -18,4 +18,13 @@ class Sermon extends Model
         return $this->hasMany(SermonAttendance::class);
     }
 
+    public function scopeWithAttendance($query, $limit)
+    {
+        return $query->selectRaw('sermons.id, sermons.sermon_date, COUNT(sermon_attendances.jemaat_id) as total_attendance')
+            ->leftJoin('sermon_attendances', 'sermon_attendances.sermon_id', '=', 'sermons.id')
+            ->groupBy('sermons.id', 'sermons.sermon_date')
+            ->orderBy('sermons.sermon_date', 'desc')
+            ->take($limit);
+    }
+
 }
