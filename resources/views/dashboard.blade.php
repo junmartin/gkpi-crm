@@ -27,32 +27,27 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="columns-2 p-6 text-gray-900 dark:text-gray-100">
-                    <p>Dashboard</p>
                     <div class="grid grid-cols-6 gap-3">
                         <div class="bg-blue-100 col-span-2">
+                            <p class="p-1 text-center">Kehadiran 5 Minggu Terakhir</p>
                             <canvas id="chart_attendance" style="width:100%;"></canvas>
+                            <div class="p-2 text-center">
+                                <x-primary-button>
+                                    <a href="{{route('sermon.index')}}">Lihat Laporan</a>
+                                </x-primary-button>
+                            </div>
                         </div>
                         <div class="bg-green-100 col-span-2">
+                            <p class="p-1 text-center">Jemaat (Laki-laki & Perempuan)</p>
                             <canvas id="chart_gender" style="width:100%;"></canvas>
                         </div>
                         <div class="bg-red-100 col-span-2">
+                            <p class="p-1 text-center">Jemaat (Usia)</p>
                             <canvas id="chart_age" style="width:100%;"></canvas>
                         </div>
                     </div>
                 </div>
-                <div class="columns-2 p-6 text-gray-900 dark:text-gray-100">
-                    <div class="grid grid-cols-6 gap-3">
-                        <div class="bg-blue-200 col-span-2 p-3">
-                            
-                        </div>
-                        <div class="bg-green-200 col-span-2">
-                            <!-- <canvas id="myChart2" style="width:100%;"></canvas> -->
-                        </div>
-                        <div class="bg-red-200 col-span-2">
-                            <!-- <canvas id="myChart3" style="width:100%;"></canvas> -->
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -92,7 +87,7 @@
             data: {
                 labels: xValues,
                 datasets: [{
-                    label: 'Kehadiran Prev 5wks',
+                    label: 'Jemaat Hadir',
                     data: yValues,
                     borderWidth: 1
                 }]

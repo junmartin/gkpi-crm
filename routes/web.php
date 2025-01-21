@@ -23,7 +23,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () { 
-    $numberOfSermons = 10; // Define how many sermons back to display
+    $numberOfSermons = 5; // Define how many sermons back to display
     $attd = Sermon::withAttendance($numberOfSermons)->get();
 
     $jemaat_by_gender = Jemaat::GroupByGender()->get();

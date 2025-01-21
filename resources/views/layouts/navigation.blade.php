@@ -18,7 +18,7 @@
                     </x-nav-link>
                 
                     <x-nav-link :href="route('jemaat.index')" :active="request()->routeIs('jemaat.index')">
-                        {{ __('Jemaat') }}
+                        {{ __('Administration') }}
                     </x-nav-link>
                 </div>
             </div>
