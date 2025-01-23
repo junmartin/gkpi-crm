@@ -1,9 +1,3 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.2/tailwind.min.css" />
-
-
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.7/Chart.js"> -->
-<!-- </script> -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
 <x-app-layout>
@@ -22,6 +16,14 @@
             </div>
         </div>
     </div> -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.2/tailwind.min.css" />
+
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.7/Chart.js"> -->
+    <!-- </script> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     
     <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
