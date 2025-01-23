@@ -28,7 +28,7 @@
     <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="columns-2 p-6 text-gray-900 dark:text-gray-100">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
                     <div class="grid grid-cols-6 gap-3">
                         <div class="bg-blue-100 col-span-2">
                             <p class="p-1 text-center">Kehadiran 5 Minggu Terakhir</p>
