@@ -129,7 +129,7 @@ class JemaatController extends Controller
 
             $filePath = "";
             if($request->hasFile('pass_photo')) {
-                $filePath = 'jemaat/file/' . $request->file('pass_photo')->getClientOriginalName();
+                $filePath = 'storage/jemaat/file/' . $request->file('pass_photo')->getClientOriginalName();
                 Storage::disk('public')->put($filePath,file_get_contents($request->file('pass_photo')));
             }
 
@@ -244,7 +244,7 @@ class JemaatController extends Controller
 
 
             if($request->hasFile('pass_photo')){
-                $filePath = 'jemaat/file/' . $request->file('pass_photo')->getClientOriginalName();
+                $filePath = 'storage/jemaat/file/' . $request->file('pass_photo')->getClientOriginalName();
                 Storage::disk('public')->put($filePath, file_get_contents($request->file('pass_photo')));
 
                 $jemaat_foto = ["pass_photo" => $filePath];
