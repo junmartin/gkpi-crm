@@ -243,7 +243,7 @@ $cityParams = explode('|', $_GET['city'] ?? '');
 
                 $marriage_date = (!empty($jem->marriage_date)) ? date('d M Y',strtotime($jem->marriage_date)) : "";
 
-                $pass_photo = ($jem->pass_photo != "") ? $jem->pass_photo : "jemaat/file/no-image.jpg";
+                $pass_photo = ($jem->pass_photo != "") ? $jem->pass_photo : "storage/jemaat/file/no-image.jpg";
                 
             ?>
             <tr style="vertical-align: top; height:60px;" >
