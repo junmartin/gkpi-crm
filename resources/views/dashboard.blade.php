@@ -140,8 +140,8 @@
                 labels: ageCategory,
                 datasets: [{
                     data: ageCount,
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'], // Optional: Colors for the slices
-                    hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'] // Optional: Hover colors
+                    backgroundColor: ['#B5E61D','#FF6384', '#36A2EB', '#FFCE56'], // Optional: Colors for the slices
+                    hoverBackgroundColor: ['#B5E61D','#FF6384', '#36A2EB', '#FFCE56'] // Optional: Hover colors
                 }]
             },
             options: {
