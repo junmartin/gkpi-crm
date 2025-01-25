@@ -86,7 +86,7 @@ class JemaatController extends Controller
             $query->where('jenis_kelamin', $where_lakilaki)
                   ->orWhere('jenis_kelamin', $where_perempuan);
         })
-        ->whereIn('birth_place',$where_city_arr)
+        // ->whereIn('birth_place',$where_city_arr)
         ->whereIn('member_type',$where_status_arr)
         ->whereIn('baptise_status',$where_baptise_arr)
         ->orderBy('family_id', 'asc')

@@ -141,12 +141,12 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                 <?php } ?>
                 <br>
 
-                Tempat Lahir:
-                <?php foreach ($distinct_city as $city) { ?>
-                    <input type="checkbox" class="refresh" name="<?php echo "city_".str_replace(' ', '_', $city);?>" value="1" 
-                        id="<?php echo "city_".str_replace(' ', '_', $city);?>" <?php echo $chk_city[str_replace(' ', '_', $city)];?>>
-                    <label for="<?php echo "city_".str_replace(' ', '_', $city);?>"> <?php echo ucfirst($city); ?></label>
-                <?php } ?>
+                <!-- Tempat Lahir: -->
+                <?php //foreach ($distinct_city as $city) { ?>
+                    <!-- <input type="checkbox" class="refresh" name="<?php echo "city_".str_replace(' ', '_', $city);?>" value="1" 
+                        id="<?php //echo "city_".str_replace(' ', '_', $city);?>" <?php echo $chk_city[str_replace(' ', '_', $city)];?>> -->
+                    <!-- <label for="<?php echo "city_".str_replace(' ', '_', $city);?>"> <?php echo ucfirst($city); ?></label> -->
+                <?php //} ?>
 
             </td>
             <td style="vertical-align: top;">
