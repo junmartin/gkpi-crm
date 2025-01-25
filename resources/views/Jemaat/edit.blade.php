@@ -148,25 +148,25 @@
                 <tr>
                     <td>Tempat Lahir</td>
                     <td>
-                        <input type="text" id="birth_place" name="birth_place" maxlength="100" required value="{{$jemaat->birth_place}}">
+                        <input type="text" id="birth_place" name="birth_place" maxlength="100" value="{{$jemaat->birth_place}}">
                     </td>
                 </tr>
                 <tr>
                     <td>Tanggal Lahir</td>
                     <td>
-                        <input type="date" id="birth_date" name="birth_date" maxlength="100" required value="{{$jemaat->birth_date}}">
+                        <input type="date" id="birth_date" name="birth_date" maxlength="100" value="{{$jemaat->birth_date}}">
                     </td>
                 </tr>
                 <tr>
                     <td>Alamat</td>
                     <td>
-                        <textarea rows="4" cols="50" style="width:100%" id="address" name="address" required>{{$jemaat->address}}</textarea>
+                        <textarea rows="4" cols="50" style="width:100%" id="address" name="address">{{$jemaat->address}}</textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>No HP</td>
                     <td>
-                        <input type="text" id="mobile_no" name="mobile_no" maxlength="100" required value="{{$jemaat->mobile_no}}">
+                        <input type="text" id="mobile_no" name="mobile_no" maxlength="100" value="{{$jemaat->mobile_no}}">
                     </td>
                 </tr>
                 <tr>

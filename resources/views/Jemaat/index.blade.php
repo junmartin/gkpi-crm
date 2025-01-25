@@ -237,9 +237,14 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                 $kelamin = ($jem->jenis_kelamin == "0") ? "L" : "P";
                 $badge_color = ($jem->jenis_kelamin == "0") ? "primary" : "danger";
                 
-                $birthDate = new DateTime($jem->birth_date);
-                $today = new DateTime(); // Gets the current date
-                $age = $today->diff($birthDate)->y; // Calculate the difference in years
+                if(!empty($jem->birth_date)){
+
+                    $birthDate = new DateTime($jem->birth_date);
+                    $today = new DateTime(); // Gets the current date
+                    $age = $today->diff($birthDate)->y." tahun"; // Calculate the difference in years
+                }else{
+                    $age = "N/A";
+                }
 
                 $marriage_date = (!empty($jem->marriage_date)) ? date('d M Y',strtotime($jem->marriage_date)) : "";
 
@@ -266,12 +271,12 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                             </td>
                         </tr>
                         <tr style="height:20px;">
-                            <td style="vertical-align:top;">{{$age." tahun"}}</td>
+                            <td style="vertical-align:top;">{{$age}}</td>
                         </tr>
                     </table>
                 </td>
                 
-                <td>{{$jem->birth_place}}, {{date('d-M-Y',strtotime($jem->birth_date))}}</td>
+                <td>{{$jem->birth_place}}, {{(!empty($jem->birth_date)) ? date('d-M-Y',strtotime($jem->birth_date)) : "N/A"}}</td>
                 <td>{{$jem->mobile_no}}<br>{{$jem->email}}</td>
                 <td>{{$jem->address}}</td>
                 <!-- <td>{{$status_kawin[$jem->marital_status]}}</td> -->

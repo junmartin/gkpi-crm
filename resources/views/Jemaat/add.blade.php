@@ -142,25 +142,25 @@
                 <tr>
                     <td>Tempat Lahir</td>
                     <td>
-                        <input type="text" id="birth_place" name="birth_place" maxlength="100" required>
+                        <input type="text" id="birth_place" name="birth_place" maxlength="100">
                     </td>
                 </tr>
                 <tr>
                     <td>Tanggal Lahir</td>
                     <td>
-                        <input type="date" id="birth_date" name="birth_date" maxlength="100" required>
+                        <input type="date" id="birth_date" name="birth_date" maxlength="100">
                     </td>
                 </tr>
                 <tr>
                     <td>Alamat</td>
                     <td>
-                        <textarea rows="4" cols="50" style="width:100%" id="address" name="address" required></textarea>
+                        <textarea rows="4" cols="50" style="width:100%" id="address" name="address"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>No HP</td>
                     <td>
-                        <input type="text" id="mobile_no" name="mobile_no" maxlength="100" required>
+                        <input type="text" id="mobile_no" name="mobile_no" maxlength="100">
                     </td>
                 </tr>
                 <tr>
