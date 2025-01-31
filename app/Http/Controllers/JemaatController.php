@@ -154,7 +154,8 @@ class JemaatController extends Controller
                 "baptise_status" => $request['baptise_status'],
                 "previous_church" => $request['previous_church'],
                 "remark" => $request['remark'],
-                "pass_photo" => $filePath
+                "pass_photo" => $filePath,
+                "create_by" => auth()->id()
             ];
             Jemaat::create($jemaat);
 
@@ -236,6 +237,7 @@ class JemaatController extends Controller
                 "remark" => $request['remark'],
                 "family_id" => $request['family_id'],
                 "role" => $request['role'],
+                "update_by" => auth()->id()
                 
             ];
             

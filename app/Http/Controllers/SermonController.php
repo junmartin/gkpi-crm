@@ -24,7 +24,7 @@ class SermonController extends Controller
     {
         $ibadah = Ibadah::get();
         // $sermon = Sermon::withTotalAttendees()->get();
-        $sermon = Sermon::withCount('attendee')->get(); // attendance_count
+        $sermon = Sermon::withCount('attendee')->orderBy('sermon_date','desc')->get(); // attendance_count
         return view('Sermon/index',compact('sermon','ibadah'));
     }
 
@@ -55,15 +55,18 @@ class SermonController extends Controller
             ];
             $sermon = Sermon::create($serm);
             
-            // INSERT SERMON ATTENDANCE
-            $attd = [];
-            foreach($request['jemaat'] as $jem){
-                $attd = [
-                    'sermon_id' => $sermon->id,
-                    'jemaat_id' => $jem,
-                    'attendance' => 1
-                ];
-                SermonAttendance::create($attd);
+            if(!empty($request['jemaat'])){
+                // INSERT SERMON ATTENDANCE
+            
+                $attd = [];
+                foreach($request['jemaat'] as $jem){
+                    $attd = [
+                        'sermon_id' => $sermon->id,
+                        'jemaat_id' => $jem,
+                        'attendance' => 1
+                    ];
+                    SermonAttendance::create($attd);
+                }
             }
             
             DB::commit();
@@ -147,5 +150,9 @@ class SermonController extends Controller
     public function destroy(Sermon $sermon)
     {
         //
+    }
+
+    function report() {
+        
     }
 }

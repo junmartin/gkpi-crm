@@ -33,7 +33,9 @@ class Jemaat extends Model
         'remark',
         'pass_photo',
         'family_id',
-        'role'
+        'role',
+        'create_by',
+        'update_by'
     ];
 
     function attendance() : HasMany {  
