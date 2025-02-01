@@ -80,6 +80,31 @@
                     </td>
                 </tr>
             </tbody>
+            <thead>
+                <th colspan="2">Media</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Foto Asset</td>
+                    <td>
+                        <input type="file" id="asset_photo" name="asset_photo[]" multiple accept=".jpg,.jpeg,.png,.mp4,.avi,.mov">
+                        <p style="color:red"><b>Perhatian! Foto Lama Akan Terhapus Jika Mengupload Foto Baru</b></p>
+                        <span id="error_message_media" style="color: red;"></span>
+                        <ul id="file_list" style="list-style: none; padding: 0;"></ul>
+                        <ol>
+                            @foreach($asset_photos as $photo)
+
+                            <?php 
+                                $asset_photo = ($photo->asset_photo !="") ? $photo->asset_photo : "storage/jemaat/file/no-image.jpg";
+                            ?>
+                            
+                            <img src="{{ asset($asset_photo) }}" width="50px" />
+                            @endforeach
+                        </ol>
+                    </td>
+                </tr>
+            
+            </tbody>
         </table>
     </span>
     <span style="float:left; width:33%; max-height:300px">
@@ -116,4 +141,8 @@
 </div>
 </form>
 
+@endsection
+
+@section('script')
+<script src="{{ asset('assets/js/edit_assets.js') }}?v={{time()}}"></script>
 @endsection

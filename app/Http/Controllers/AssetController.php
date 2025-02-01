@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Asset;
 use App\Models\AssetType;
 use App\Models\AssetMaint;
+use App\Models\AssetPhoto;
 use Illuminate\Http\Request;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -39,8 +40,11 @@ class AssetController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
         try {
             DB::beginTransaction();
+
+            
             
             $asset = [
                 'type_id' => $request['type_id'],
@@ -52,7 +56,21 @@ class AssetController extends Controller
                 'spec' => $request['spec'],
                 'acquired_date' => $request['acquired_date'],
             ];
-            Asset::create($asset);
+            $inserted_asset = Asset::create($asset);
+
+            
+            if($request->hasFile('asset_photo')) {
+                foreach($request->file('asset_photo') as $x => $file){
+                    // $filePath[$x] = 'storage/asset/file/' . $file->file('asset_photo')->getClientOriginalName();
+                    $filePath = 'asset/file/' . $file->hashName();
+                    // Storage::disk('public')->put($filePath,file_get_contents($request->file('asset_photo')));
+                    Storage::disk('public')->put($filePath, file_get_contents($file));
+                    AssetPhoto::create([
+                        'asset_id' => $inserted_asset->id,
+                        'asset_photo' => $filePath
+                    ]);
+                }
+            }
 
             DB::commit();
             Log::info('Data saved');
@@ -80,8 +98,9 @@ class AssetController extends Controller
     {
         $asset_type = AssetType::get();
         $maints = AssetMaint::where('asset_id',$asset->id)->get();
-
-        return view('Asset/edit', compact('asset','asset_type','maints'));
+        $asset_photos = AssetPhoto::where('asset_id',$asset->id)->get();
+        // dd($asset_photos);
+        return view('Asset/edit', compact('asset','asset_type','maints','asset_photos'));
     }
 
     /**
@@ -104,6 +123,21 @@ class AssetController extends Controller
             ];
             $post = Asset::findOrFail($asset['id']);
             $post->update($new_asset);
+
+            AssetPhoto::where('asset_id',$asset['id'])->delete();
+
+            if($request->hasFile('asset_photo')) {
+                foreach($request->file('asset_photo') as $x => $file){
+                    // $filePath[$x] = 'storage/asset/file/' . $file->file('asset_photo')->getClientOriginalName();
+                    $filePath = 'asset/file/' . $file->hashName();
+                    // Storage::disk('public')->put($filePath,file_get_contents($request->file('asset_photo')));
+                    Storage::disk('public')->put($filePath, file_get_contents($file));
+                    AssetPhoto::create([
+                        'asset_id' => $asset['id'],
+                        'asset_photo' => $filePath
+                    ]);
+                }
+            }
 
             DB::commit();
             Log::info('Asset Data Update');

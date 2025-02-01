@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\AssetType;
+use App\Models\AssetPhoto;
+
 
 
 class Asset extends Model
@@ -26,5 +28,9 @@ class Asset extends Model
 
     public function maintenance() {
         return $this->hasMany(AssetMaintenance::class);
+    }
+
+    public function asset_photo(){
+        return $this->hasMany(AssetPhoto::class);
     }
 }
