@@ -154,7 +154,7 @@ class JemaatController extends Controller
                 "baptise_status" => $request['baptise_status'],
                 "previous_church" => $request['previous_church'],
                 "remark" => $request['remark'],
-                "pass_photo" => $filePath,
+                "pass_photo" => 'storage/'.$filePath,
                 "create_by" => auth()->id()
             ];
             Jemaat::create($jemaat);
@@ -244,12 +244,11 @@ class JemaatController extends Controller
             $jemaat = Jemaat::findOrFail($id);
             $jemaat->update($jemaat_updated);
 
-
             if($request->hasFile('pass_photo')){
                 $filePath = 'jemaat/file/' . $request->file('pass_photo')->getClientOriginalName();
                 Storage::disk('public')->put($filePath, file_get_contents($request->file('pass_photo')));
 
-                $jemaat_foto = ["pass_photo" => $filePath];
+                $jemaat_foto = ["pass_photo" => 'storage/'.$filePath];
                 $jemaat_2 = Jemaat::findOrFail($id);
                 $jemaat_2->update($jemaat_foto);
             }
