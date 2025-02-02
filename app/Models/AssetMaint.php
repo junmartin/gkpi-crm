@@ -19,6 +19,8 @@ class AssetMaint extends Model
         'desc',
         'maint_fee',
         'remark',
+        'create_by',
+        'update_by'
     ];
 
     public function asset() {

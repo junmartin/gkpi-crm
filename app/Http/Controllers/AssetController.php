@@ -55,6 +55,7 @@ class AssetController extends Controller
                 'tipe' => $request['tipe'],
                 'spec' => $request['spec'],
                 'acquired_date' => $request['acquired_date'],
+                'create_by' => auth()->id()
             ];
             $inserted_asset = Asset::create($asset);
 
@@ -120,6 +121,7 @@ class AssetController extends Controller
                 'tipe' => $request['tipe'],
                 'spec' => $request['spec'],
                 'acquired_date' => $request['acquired_date'],
+                'update_by' => auth()->id()
             ];
             $post = Asset::findOrFail($asset['id']);
             $post->update($new_asset);

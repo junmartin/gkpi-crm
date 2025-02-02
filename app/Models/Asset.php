@@ -19,7 +19,9 @@ class Asset extends Model
         'serial_number',
         'tipe',
         'spec',
-        'acquired_date'
+        'acquired_date',
+        'create_by',
+        'update_by'
     ];
 
     public function asset_type() {

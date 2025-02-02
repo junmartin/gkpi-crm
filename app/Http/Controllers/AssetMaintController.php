@@ -53,6 +53,7 @@ class AssetMaintController extends Controller
                 'desc' => $request['desc'],
                 'maint_fee' => $request['maint_fee'],
                 'remark' => $request['remark'],
+                'create_by' => auth()->id()
             ];
             AssetMaint::create($asset);
 
@@ -101,6 +102,7 @@ class AssetMaintController extends Controller
                 'desc' => $request['desc'],
                 'maint_fee' => $request['maint_fee'],
                 'remark' => $request['remark'],
+                'update_by' => auth()->id()
             ];
             
             $post = AssetMaint::findOrFail($assetMaint['id']);
