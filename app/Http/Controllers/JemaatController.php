@@ -80,7 +80,7 @@ class JemaatController extends Controller
         if(empty($where_baptise_arr)){
             $where_baptise_arr = $baptise_default;
         }
-
+        
 
         $jemaats = Jemaat::where(function (Builder $query) use ($where_lakilaki, $where_perempuan) {
             $query->where('jenis_kelamin', $where_lakilaki)
@@ -89,11 +89,36 @@ class JemaatController extends Controller
         // ->whereIn('birth_place',$where_city_arr)
         ->whereIn('member_type',$where_status_arr)
         ->whereIn('baptise_status',$where_baptise_arr)
-        ->orderBy('family_id', 'asc')
-        ->orderBy('role', 'desc')
-        ->orderBy('name', 'asc')
-        ->with('family')
-        ->get();
+        // ->orderBy('family_id', 'asc')
+        // ->orderBy('role', 'desc')
+        // ->orderBy('name', 'asc')
+        // ->orderBy('id', 'desc')
+        ->with('family');
+        // ->get();
+
+        if( !empty($param['sort'])){
+
+            if ( $param['sort'] == 'age_asc' )
+            {
+                $jemaats->orderBy('birth_date', 'desc');
+            }
+            elseif ( $param['sort'] == 'age_desc' )
+            {
+                $jemaats->orderBy('birth_date', 'asc');
+            }
+            elseif ( $param['sort'] == 'name_asc' )
+            {
+                $jemaats->orderBy('name', 'asc');
+            }
+            elseif ( $param['sort'] == 'name_desc' )
+            {
+                $jemaats->orderBy('name', 'desc');
+            }
+         
+        }
+
+        $jemaats->orderBy('id', 'desc');
+        $jemaats = $jemaats->get();
 
         // dd($jemaats);
 
@@ -176,7 +201,9 @@ class JemaatController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $family = Family::get();
+        $jemaat = Jemaat::find($id);
+        return view('Jemaat/view', compact('jemaat','family'));
     }
 
     /**

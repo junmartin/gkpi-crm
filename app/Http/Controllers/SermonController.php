@@ -152,7 +152,11 @@ class SermonController extends Controller
         //
     }
 
-    function report() {
-        
+    public function report() {
+        $ibadah = Ibadah::get();
+        $jemaats = Jemaat::get();
+        $sermon = Sermon::get();
+        $attds = SermonAttendance::orderBy('sermon_id','asc')->get();
+        return view('Sermon/report',compact('sermon','attds','jemaats','ibadah'));
     }
 }

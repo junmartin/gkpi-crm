@@ -5,7 +5,7 @@
     table {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 20px;
+        /* margin-bottom: 20px; */
         border: 1px solid black;
     }
     tr:hover {
@@ -83,6 +83,8 @@
     $chk_city = [];
 
 
+    // FILTER
+
     $chk_lakilaki = (!empty($param['lakilaki'])) ? 'checked' : '';
     $chk_perempuan = (!empty($param['perempuan'])) ? 'checked' : '';
 
@@ -97,6 +99,16 @@
     foreach ($distinct_baptise as $baptise) {
         $chk_baptise[str_replace(' ', '_', $baptise)] = (!empty($param['baptise_'.str_replace(' ', '_', $baptise)])) ? "checked" : "";
     }      
+
+    // SORTING
+    $chk_sort_age_asc = (!empty($param['sort']) && $param['sort'] == 'age_asc') ? "checked" : "";
+    $chk_sort_age_desc = (!empty($param['sort']) && $param['sort'] == 'age_desc') ? "checked" : "";
+    
+    $chk_sort_alphabet_asc = (!empty($param['sort']) && $param['sort'] == 'name_asc') ? "checked" : "";
+    $chk_sort_alphabet_desc = (!empty($param['sort']) && $param['sort'] == 'name_desc') ? "checked" : "";
+    
+    $chk_sort_input_desc = (!empty($param['sort']) && $param['sort'] == 'input_desc') ? "checked" : "";
+    
 ?>
 
 <h3>Jemaat</h3>
@@ -112,6 +124,8 @@ $statusParams = explode('|', $_GET['status'] ?? '');
 $forParams = explode('|', $_GET['for'] ?? '');
 $typeParams = explode('|', $_GET['type'] ?? '');
 $cityParams = explode('|', $_GET['city'] ?? '');
+
+
 ?>
 
         <tr>
@@ -150,7 +164,13 @@ $cityParams = explode('|', $_GET['city'] ?? '');
 
             </td>
             <td style="vertical-align: top;">
-                Sorting
+                <input type="radio" class="refresh" name="sort" id="sort_age_asc" value="age_asc" <?php echo $chk_sort_age_asc;?>><label for="sort_age_asc">Termuda</label>
+                <input type="radio" class="refresh" name="sort" id="sort_age_desc" value="age_desc" <?php echo $chk_sort_age_desc;?>><label for="sort_age_desc">Tertua</label>
+                <br>
+                <input type="radio" class="refresh" name="sort" id="sort_alphabet_asc" value="name_asc" <?php echo $chk_sort_alphabet_asc;?>><label for="sort_alphabet_asc">A-Z</label>
+                <input type="radio" class="refresh" name="sort" id="sort_alphabet_desc" value="name_desc" <?php echo $chk_sort_alphabet_desc;?>><label for="sort_alphabet_desc">Z-A</label>
+                <br>
+                <input type="radio" class="refresh" name="sort" id="sort_input_desc" value="input_desc" <?php echo $chk_sort_input_desc;?>><label for="sort_input_desc">Last Input</label>
             </td>
             <td style="vertical-align: top;">
                 <!-- <input type="checkbox" class="refresh" name="show_add" value="1" id="show_add" <?php //echo (in_array('show_add',$column_show)) ? 'checked' : '';?>>
@@ -167,7 +187,7 @@ $cityParams = explode('|', $_GET['city'] ?? '');
 </table>
 
 </form>
-
+<br>
 <a href="{{ route('jemaat.create')}}">[+ Add New]</a>
 <table border="1">
     <colgroup>
@@ -256,12 +276,12 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                     <table style="border:0px;">
                         <tr style="height:20px;">
                             <td rowspan="2" style="vertical-align:top; width:45px;">
-                                <a href="{{ route('jemaat.edit', $jem->id)}}" style="text-decoration:none;">
+                                <a href="{{ route('jemaat.show', $jem->id)}}" style="text-decoration:none;">
                                     <img src="{{ asset($pass_photo) }}" width="40px" />
                                 </a>
                             </td>
                             <td>
-                                <a href="{{ route('jemaat.edit', $jem->id)}}" style="text-decoration:none;">
+                                <a href="{{ route('jemaat.show', $jem->id)}}" style="text-decoration:none;">
                                     <span class="badge" style="vertical-align:top; margin-top:5px;">
                                         <span class="badge-key">{{$kelamin}}</span><span class="badge-value-{{$badge_color}}">{{$jem->name}}</span>
                                         <!-- <span class="badge-key">{{$jem->name}}</span><span class="badge-value-{{$badge_color}}">{{$jem->nick_name}}</span> -->
@@ -301,8 +321,9 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                             
                 </td>
                 <td style="text-align:center;">
-                    <a href="{{ route('jemaat.edit', $jem->id)}}">[ View ]</a>
-                    <br><br><a href="{{ route('jemaat.edit', $jem->id)}}">[ Edit ]</a>
+                    <!-- <a href="{{ route('jemaat.edit', $jem->id)}}">[ View ]</a>
+                    <br><br> -->
+                    <a href="{{ route('jemaat.edit', $jem->id)}}">[ Edit ]</a>
                 </td>
             </tr>
         @endforeach

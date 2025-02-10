@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 use App\Models\SermonAttendance;
 
@@ -25,6 +26,10 @@ class Sermon extends Model
             ->groupBy('sermons.id', 'sermons.sermon_date')
             ->orderBy('sermons.sermon_date', 'desc')
             ->take($limit);
+    }
+
+    function ibadah(): BelongsTo {
+        return $this->belongsTo(Ibadah::class);
     }
 
 }

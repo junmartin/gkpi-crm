@@ -62,7 +62,8 @@ foreach ($ibadah as $key => $value) {
 
 ?>
 
-<a href="{{ route('sermon.create')}}">[+ Add New]</a>
+<a href="{{ route('sermon.create')}}">[+ Add New] </a>
+<a href="{{ route('sermon.report')}}" target="_blank">[View Report] </a>
 <table border="1">
     <thead>
         <tr>
