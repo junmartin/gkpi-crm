@@ -20,7 +20,14 @@ class AssetMaint extends Model
         'maint_fee',
         'remark',
         'create_by',
-        'update_by'
+        'update_by',
+        'vendor_name',
+        'vendor_address',
+        'vendor_contact',
+        'masalah',
+        'diagnosa',
+        'tindakan',
+        'hasil'
     ];
 
     public function asset() {

@@ -53,6 +53,13 @@ class AssetMaintController extends Controller
                 'desc' => $request['desc'],
                 'maint_fee' => $request['maint_fee'],
                 'remark' => $request['remark'],
+                'vendor_name' => $request['vendor_name'],
+                'vendor_address' => $request['vendor_address'],
+                'vendor_contact' => $request['vendor_contact'],
+                'masalah' => $request['masalah'],
+                'diagnosa' => $request['diagnosa'],
+                'tindakan' => $request['tindakan'],
+                'hasil' => $request['hasil'],
                 'create_by' => auth()->id()
             ];
             AssetMaint::create($asset);
@@ -102,6 +109,13 @@ class AssetMaintController extends Controller
                 'desc' => $request['desc'],
                 'maint_fee' => $request['maint_fee'],
                 'remark' => $request['remark'],
+                'vendor_name' => $request['vendor_name'],
+                'vendor_address' => $request['vendor_address'],
+                'vendor_contact' => $request['vendor_contact'],
+                'masalah' => $request['masalah'],
+                'diagnosa' => $request['diagnosa'],
+                'tindakan' => $request['tindakan'],
+                'hasil' => $request['hasil'],
                 'update_by' => auth()->id()
             ];
             

@@ -83,12 +83,13 @@
     <thead>
         <tr>
             <th>Tanggal</th>
-            <th>Judul</th>
+            <th>Service</th>
             <th>Asset</th>
             <!-- <th>Service Type</th> -->
-            <th>Service Desc</th>
-            <th>Biaya</th>
-            <th>Tanggal Service Selanjutnya</th>
+            <!-- <th>Service Desc</th> -->
+            <th>Vendor</th>
+            <th>Biaya (Rp)</th>
+            <!-- <th>Tanggal Service Selanjutnya</th> -->
             <th>Catatan</th>
             <th>Action</th>
         <tr>
@@ -106,10 +107,26 @@
                     <b>{{$maint->asset->name}}</b><br>
                 </td>
                 <!-- <td style="vertical-align:top">{{$maint->maint_type}}</td> -->
-                <td style="vertical-align:top">{{$maint->desc}}</td>
-                <td style="vertical-align:top">{{$maint->maint_fee}}</td>
-                <td style="vertical-align:top">{{$maint->next_maint_date}}</td>
-                <td style="vertical-align:top">{{$maint->remark}}</td>
+                <!-- <td style="vertical-align:top">{{$maint->desc}}</td> -->
+                <td style="vertical-align:top">
+                    <b>{{$maint->vendor_name}}</b><br>
+                    <small>{{$maint->vendor_address}}</small><br>
+                    {{$maint->vendor_contact}}
+                </td>
+                <td style="vertical-align:top; text-align:right;"><?php echo number_format($maint->maint_fee);?></td>
+                <!-- <td style="vertical-align:top">{{$maint->next_maint_date}}</td> -->
+                <td style="vertical-align:top; font-size:smaller">
+                    <b>Masalah</b>: {{$maint->masalah}}<br>
+                    <b>Diagnosa</b>: {{$maint->diagnosa}}<br>
+                    <b>Tindakan</b>: {{$maint->tindakan}}<br>
+                    <b>Hasil</b>: {{$maint->hasil}}<br>
+                    <b>Catatan</b>: {{$maint->remark}}<br>
+                    <?php if(!empty($maint->next_maint_date)){ ?>
+                        <span class="badge" style="vertical-align:top; margin-top:5px;">
+                        <span class="badge-key">Next Service</span><span class="badge-value-danger">{{$maint->next_maint_date}}</span>
+                    </span>
+                    <?php } ?>
+                </td>
                 <td style="text-align:center;">
                     <a href="{{ route('asset_maint.edit', $maint->id)}}">[ Edit ]</a>
                 </td>
