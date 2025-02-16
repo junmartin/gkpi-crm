@@ -101,6 +101,20 @@
                     </td>
                 </tr>
             </tbody>
+            <thead>
+                <th colspan="2">Media</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Foto</td>
+                    <td>
+                        <input type="file" id="asset_photo" name="asset_photo[]" multiple accept=".jpg,.jpeg,.png,.mp4,.avi,.mov">
+                        <span id="error_message_media" style="color: red;"></span>
+                        <ul id="file_list" style="list-style: none; padding: 0;"></ul>
+                        
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </span>
     <span style="float:left; width:33%">
@@ -153,6 +167,7 @@
                     </td>
                 </tr>
             </tbody>
+            
         </table>
     </span>
 
@@ -163,4 +178,8 @@
 </div>
 </form>
 
+@endsection
+
+@section('script')
+<script src="{{ asset('assets/js/add_assets_maintenance.js') }}?v={{time()}}"></script>
 @endsection

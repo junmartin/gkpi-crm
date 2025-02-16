@@ -116,7 +116,7 @@
 <table border="1">
     <th style="text-align:left; width:50%;"><b>Filter</b> <a href="javascript:void(0)" onclick="uncheck_all();">[clear filter]</a></th>
     <th style="text-align:left; width:25%;"><b>Sorting</b></th>
-    <th style="text-align:left; width:25%;"><b>Column</b></th>
+    <!-- <th style="text-align:left; width:25%;"><b>Column</b></th> -->
     <tbody>
 <?php
 // Get the status, for, type, and city parameters from the URL
@@ -172,7 +172,7 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                 <br>
                 <input type="radio" class="refresh" name="sort" id="sort_input_desc" value="input_desc" <?php echo $chk_sort_input_desc;?>><label for="sort_input_desc">Last Input</label>
             </td>
-            <td style="vertical-align: top;">
+            <!-- <td style="vertical-align: top;"> -->
                 <!-- <input type="checkbox" class="refresh" name="show_add" value="1" id="show_add" <?php //echo (in_array('show_add',$column_show)) ? 'checked' : '';?>>
                 <label for="show_add">Address</label><br> -->
 
@@ -181,7 +181,7 @@ $cityParams = explode('|', $_GET['city'] ?? '');
 <!-- 
                 <input type="checkbox" class="refresh" name="show_owner" value="1" id="show_owner" <?php //echo (in_array('show_owner',$column_show)) ? 'checked' : '';?>>
                 <label for="show_owner">Owner</label> -->
-            </td>
+            <!-- </td> -->
         </tr>
     </tbody>
 </table>

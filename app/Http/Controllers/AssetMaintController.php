@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Asset;
 use App\Models\AssetType;
 use App\Models\AssetMaint;
+use App\Models\AssetMaintenancePhoto;
 use Illuminate\Http\Request;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -62,7 +63,19 @@ class AssetMaintController extends Controller
                 'hasil' => $request['hasil'],
                 'create_by' => auth()->id()
             ];
-            AssetMaint::create($asset);
+            $inserted_maint_asset = AssetMaint::create($asset);
+
+            if($request->hasFile('asset_photo')) {
+                foreach($request->file('asset_photo') as $x => $file){
+                    $filePath = 'asset_maint/file/' . $file->hashName();
+                    // Storage::disk('public')->put($filePath,file_get_contents($request->file('asset_photo')));
+                    Storage::disk('public')->put($filePath, file_get_contents($file));
+                    AssetMaintenancePhoto::create([
+                        'asset_maint_id' => $inserted_maint_asset->id,
+                        'asset_photo' => $filePath
+                    ]);
+                }
+            }
 
             DB::commit();
             Log::info('Data saved');
@@ -89,7 +102,8 @@ class AssetMaintController extends Controller
     public function edit(AssetMaint $assetMaint)
     {
         $asset = Asset::get();
-        return view('AssetMaint/edit', compact('assetMaint','asset'));
+        $asset_photos = AssetMaintenancePhoto::where('asset_maint_id',$assetMaint->id)->get();
+        return view('AssetMaint/edit', compact('assetMaint','asset','asset_photos'));
     }
 
     /**
@@ -121,6 +135,19 @@ class AssetMaintController extends Controller
             
             $post = AssetMaint::findOrFail($assetMaint['id']);
             $post->update($asset);
+
+            AssetMaintenancePhoto::where('asset_maint_id',$assetMaint['id'])->delete();
+
+            if($request->hasFile('asset_photo')) {
+                foreach($request->file('asset_photo') as $x => $file){
+                    $filePath = 'asset_maint/file/' . $file->hashName();
+                    Storage::disk('public')->put($filePath, file_get_contents($file));
+                    AssetMaintenancePhoto::create([
+                        'asset_maint_id' => $assetMaint['id'],
+                        'asset_photo' => $filePath
+                    ]);
+                }
+            }
 
             DB::commit();
             Log::info('Data updated');

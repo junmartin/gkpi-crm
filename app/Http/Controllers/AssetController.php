@@ -20,10 +20,34 @@ class AssetController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $assets = Asset::with('asset_type')->get();
-        return view('Asset/index',compact('assets'));
+        $param = $request->all();
+        
+        
+        $asset_type = AssetType::get();
+
+
+        // Type Filter
+        $where_type_arr = [];
+        $type_default = [];
+        foreach($asset_type as $type) {
+            if( !empty($param['type_'.$type['id']])){
+                array_push($where_type_arr,$type['id']);
+            }
+            array_push($type_default, $type['id']);
+        }
+        if(empty($where_type_arr)){
+            $where_type_arr = $type_default;
+        }
+        
+
+        $assets = Asset::with('asset_type')
+        ->whereIn('type_id',$where_type_arr)
+        ->get();
+
+
+        return view('Asset/index',compact('param','assets','asset_type'));
     }
 
     /**
