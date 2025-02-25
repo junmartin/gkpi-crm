@@ -202,7 +202,7 @@ class JemaatController extends Controller
     public function show(string $id)
     {
         $family = Family::get();
-        $jemaat = Jemaat::find($id);
+        $jemaat = Jemaat::with('family')->find($id);
         return view('Jemaat/view', compact('jemaat','family'));
     }
 

@@ -69,6 +69,11 @@
 
     $pass_photo = ($jemaat->pass_photo != "") ? $jemaat->pass_photo : "storage/jemaat/file/no-image.jpg";
 ?>
+
+<?php
+// dd($jemaat);
+
+?>
     <div class="profile-container">
         <div class="profile-header">
             <h2>GKPI Griya Permata</h2>
@@ -91,7 +96,7 @@
                 <tr><td class="label">Spouse Name:</td><td><?php echo $jemaat['spouse_name'];?></td></tr>
                 <tr><td class="label">Married Date:</td><td><?php echo $jemaat['marriage_date'];?></td></tr>
                 <tr><td class="label">Role in Family:</td><td><?php echo $jemaat['role'];?></td></tr>
-                <tr><td class="label">Family Group:</td><td><?php echo $jemaat->family->family_name;?></td></tr>
+                <tr><td class="label">Family Group:</td><td><?php echo ( !empty($jemaat->family->family_name) ) ? $jemaat->family->family_name : "-" ;?></td></tr>
                 <tr><td class="label">Status in Church:</td><td><?php echo $jemaat['member_type'];?></td></tr>
                 <tr><td class="label">Baptise Status:</td><td><?php echo $jemaat['baptise_status'];?></td></tr>
                 <tr><td class="label">Previous Church:</td><td><?php echo $jemaat['previous_church'];?></td></tr>
