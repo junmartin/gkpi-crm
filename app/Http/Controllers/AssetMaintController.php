@@ -30,10 +30,25 @@ class AssetMaintController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    // public function create(Request $request)
+    // {
+
+    //     $asset = Asset::get();
+    //     return view('AssetMaint/add',compact('asset'));
+    // }
+
+    public function create($asset_id = null)
     {
+        $isAssetGiven = !is_null($asset_id);
+        $asset_name = "";
+        if($isAssetGiven){
+            $asset = Asset::find($asset_id);
+            $asset_name = $asset ? $asset->name : '';
+        }
+
+        
         $asset = Asset::get();
-        return view('AssetMaint/add',compact('asset'));
+        return view('AssetMaint/add',compact('asset_id','asset_name','isAssetGiven','asset'));
     }
 
     /**

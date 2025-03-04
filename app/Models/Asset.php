@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\AssetType;
 use App\Models\AssetPhoto;
+use App\Models\AssetMaint;
 
 
 
@@ -20,6 +21,10 @@ class Asset extends Model
         'tipe',
         'spec',
         'acquired_date',
+        'status',
+        'location',
+        'pic',
+        'ownership',
         'create_by',
         'update_by'
     ];
@@ -29,7 +34,7 @@ class Asset extends Model
     }
 
     public function maintenance() {
-        return $this->hasMany(AssetMaintenance::class);
+        return $this->hasMany(AssetMaint::class);
     }
 
     public function asset_photo(){

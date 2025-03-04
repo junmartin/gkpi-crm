@@ -11,7 +11,7 @@
     <div style="color: red;">
         <ul>
             @foreach ($errors->all() as $error)
-                <li>{{ $error }} eargaer</li>
+                <li>{{ $error }} error occured</li>
             @endforeach
         </ul>
     </div>
@@ -32,26 +32,30 @@
                     </td>
                 </tr>
                 <tr>
-                    <td style="width:50%;">Judul Service</td>
-                    <td style="width:50%;">
-                        <input type="text" id="maint_title" name="maint_title" maxlength="100" required>
-                    </td>
-                </tr>
-                <tr>
                     <td style="width:50%;">Asset</td>
                     <td style="width:50%;">
+                        @if(!$isAssetGiven)
                         <select id="asset_id" name="asset_id" required>
                             @foreach($asset as $ast)
                             <option value="{{$ast->id}}">{{$ast->name}}</option>
                             @endforeach
                         </select>
+                        @else
+                        <input type="hidden" id="asset_id" name="asset_id" value="{{$asset_id}}" >
+                        <input type="text" id="asset_name" name="asset_name" value="{{$asset_name}}" disabled>
+                        @endif
                     </td>
                 </tr>
-                
                 <tr>
                     <td style="width:50%;">Tipe Service</td>
                     <td style="width:50%;">
                         <input type="text" id="maint_type" name="maint_type" maxlength="100" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:50%;">Judul Service</td>
+                    <td style="width:50%;">
+                        <input type="text" id="maint_title" name="maint_title" maxlength="100" required>
                     </td>
                 </tr>
 

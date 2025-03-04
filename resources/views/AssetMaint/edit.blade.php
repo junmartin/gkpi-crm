@@ -31,13 +31,7 @@
                     <td style="width:50%;">
                         <input type="date" id="maint_date" name="maint_date" value="{{$assetMaint->maint_date}}">
                     </td>
-                </tr>
-                <tr>
-                    <td style="width:50%;">Judul Service</td>
-                    <td style="width:50%;">
-                        <input type="text" id="maint_title" name="maint_title" maxlength="100"  value="{{$assetMaint->maint_title}}"required>
-                    </td>
-                </tr>
+                </tr>                
                 <tr>
                     <td style="width:50%;">Asset</td>
                     <td style="width:50%;">
@@ -47,12 +41,17 @@
                             @endforeach
                         </select>
                     </td>
-                </tr>
-                
+                </tr>                
                 <tr>
                     <td style="width:50%;">Tipe Service</td>
                     <td style="width:50%;">
                         <input type="text" id="maint_type" name="maint_type" maxlength="100"  value="{{$assetMaint->maint_type}}"required>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:50%;">Judul Service</td>
+                    <td style="width:50%;">
+                        <input type="text" id="maint_title" name="maint_title" maxlength="100"  value="{{$assetMaint->maint_title}}"required>
                     </td>
                 </tr>
                 
@@ -172,7 +171,7 @@
                 <tr>
                     <td style="width:50%;">Catatan</td>
                     <td style="width:50%;">
-                        <textarea rows="4" cols="50" style="width:100%" id="remark" name="remark">{{$assetMaint->remark}}</textarea>
+                        <textarea rows="4" cols="50" style="width:98%" id="remark" name="remark">{{$assetMaint->remark}}</textarea>
                     </td>
                 </tr>
             </tbody>

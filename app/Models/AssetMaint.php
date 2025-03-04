@@ -30,6 +30,10 @@ class AssetMaint extends Model
         'hasil'
     ];
 
+    protected $casts = [
+        'maint_date' => 'datetime',
+    ];
+
     public function asset() {
         return $this->belongsTo(Asset::class, 'asset_id');
     }

@@ -75,7 +75,65 @@
                 <tr>
                     <td style="width:50%;">Spesifikasi</td>
                     <td style="width:50%;">
-                        <textarea rows="4" cols="50" style="width:100%" id="spec" name="spec"></textarea>
+                        <textarea rows="4" cols="50" style="width:98%" id="spec" name="spec"></textarea>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </span>
+    <span style="float:left; width:33%">
+        <table border="1" width="100%">
+            
+            <thead>
+                <th colspan="2">Ownership & Status</th>
+            </thead>
+            <tbody>                
+                <tr>
+                    <td style="width:50%;">Asset Status</td>
+                    <?php 
+                        $asset_status['new'] = "New";
+                        $asset_status['use'] = "In Use";
+                        $asset_status['oos'] = "Out of Service";
+                        $asset_status['sto'] = "In Storage";
+                        $asset_status['dis'] = "Disposed";
+                        $asset_status['los'] = "Lost/Stolen";
+                        $asset_status['dmg'] = "Damage/Broken";
+                    ?>
+                    <td style="width:50%;">
+                        <select type="text" id="status" name="status" required>
+                            @foreach($asset_status as $s => $sts)
+                                <option value="{{$s}}">{{$sts}}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:50%;">Location</td>
+                    <td style="width:50%;">
+                        <select type="text" id="location" name="location" required>
+                            <option value="Ruang Ibadah">Ruang Ibadah</option>
+                            <option value="Ruang Sekolah Minggu">Ruang Sekolah Minggu</option>
+                            <option value="Ruang Tengah">Ruang Tengah</option>
+                            <option value="Kantor">Kantor</option>
+                            <option value="Pastori">Pastori</option>
+                            <option value="Dapur">Dapur</option>
+                            <option value="Gudang">Gudang</option>
+                            <option value="Cafe">Cafe</option>
+                            <option value="Halaman">Halaman</option>
+                            <option value="Tempat Lain">Tempat Lain</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:50%;">PIC</td>
+                    <td style="width:50%;">
+                        <input type="text" id="pic" name="pic" maxlength="100">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:50%;">Ownership<br><small>(leave blank if belong to Church)</small></td>
+                    <td style="width:50%;">
+                        <input type="text" id="ownership" name="ownership" maxlength="100">
                     </td>
                 </tr>
             </tbody>
@@ -88,13 +146,10 @@
                     <td>
                         <input type="file" id="asset_photo" name="asset_photo[]" multiple accept=".jpg,.jpeg,.png,.mp4,.avi,.mov">
                         <span id="error_message_media" style="color: red;"></span>
-                        <ul id="file_list" style="list-style: none; padding: 0;"></ul>
-                        
+                        <ul id="file_list" style="list-style: none; padding: 0;"></ul>                        
                     </td>
-                </tr>
-            
+                </tr>            
             </tbody>
-
         </table>
     </span>
 </div>

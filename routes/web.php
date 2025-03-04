@@ -51,7 +51,14 @@ Route::get('/sermon_report',[SermonController::class,'report'])->middleware(['au
 // Route::resource('attendance',AttendanceController::class)->middleware(['auth','verified']);
 Route::resource('asset_type',AssetTypeController::class)->middleware(['auth','verified']);
 Route::resource('asset',AssetController::class)->middleware(['auth','verified']);
+Route::get('/asset/{asset_id}/edit_status', [AssetController::class, 'edit_status'])->middleware(['auth','verified'])->name('asset.edit_status');
+Route::match(['patch', 'put'], '/asset/{asset_id}/update_status', [AssetController::class, 'update_status'])
+    ->middleware(['auth', 'verified'])
+    ->name('asset.update_status');
 Route::resource('asset_maint',AssetMaintController::class)->middleware(['auth','verified']);
+Route::get('/asset_maint/create/{asset_id?}', [AssetMaintController::class, 'create'])    
+    ->middleware(['auth', 'verified'])
+    ->name('asset_maint.create.with_param');
 // Route::resource('asset_photo',AssetPhotoController::class)->middleware(['auth','verified']);
 // Route::get('/attendance/{sermon_date}/{ibadah_id}', [AttendanceController::class,'adjustment'])->middleware(['auth','verified'])->name('attendance.adjust');
 // Route::post('/attendance/{sermon_date}/{ibadah_id}', [AttendanceController::class,'adjustment_update'])->middleware(['auth','verified'])->name('attendance.adjust_update');
