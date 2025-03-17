@@ -94,7 +94,7 @@
                 <tr>
                     <td style="width:50%;">Biaya</td>
                     <td style="width:50%;">
-                        <input type="number" id="maint_fee" name="maint_fee" maxlength="100"  value="{{$assetMaint->maint_fee}}">
+                        <input type="number" id="maint_fee" name="maint_fee" maxlength="100"  value="{{$assetMaint->maint_fee}}" required>
                     </td>
                 </tr>
             </tbody>

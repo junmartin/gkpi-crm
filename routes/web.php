@@ -14,6 +14,7 @@ use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AssetMaintController;
 // use App\Http\Controllers\AssetPhotoController;
 
+use App\Http\Controllers\ChatbotController;
 
 
 use App\Models\SermonAttendance;
@@ -66,4 +67,22 @@ Route::get('/jemaat/{jemaat_id}/assign_family', [FamilyDetailController::class,'
 Route::post('/jemaat/{jemaat_id}/assign_family', [FamilyDetailController::class,'update'])->middleware(['auth','verified'])->name('assign_family.submit');
 
 Route::get('/template', [JemaatController::class,'template'])->middleware(['auth','verified']);
+
+
+Route::get('/chatbot', function(){
+    echo "get chatbot";
+    return view('chatbot');
+});
+
+// Route::post('api/chatbot', [ChatbotController::class, 'handleRequest']);
+
+// Route::post('/chatbot_s', function () {
+//     echo "post chatbot";
+//     // return response()->json([
+//     //     'status' => 'success',
+//     //     'message' => 'API is working!'
+//     // ], 200);
+// })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+
 require __DIR__.'/auth.php';

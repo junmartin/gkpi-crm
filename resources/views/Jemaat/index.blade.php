@@ -311,9 +311,14 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                 </td>
                 <!-- <td>{{$jem->previous_church}}</td>  -->
 
-                
+                <?php 
+                    $member['simpatisan']['name'] = 'Simpatisan';   
+                    $member['simpatisan']['color'] = 'orange';   
+                    $member['permanen']['name'] = 'Jemaat Tetap';   
+                    $member['permanen']['color'] = 'green';
+                ?>
                 <td style="font-size:small; line-height:1;">
-                    <a href="#"><img src="https://img.shields.io/badge/Status-Jemaat_Tetap-green" alt="Inquiries"></a>
+                    <a href="#"><img src="https://img.shields.io/badge/Status-{{ucfirst($member[$jem->member_type]['name'])}}-{{$member[$jem->member_type]['color']}}" alt="Inquiries"></a>
                     <br>
                     <a href="#"><img src="https://img.shields.io/badge/Baptis-{{$jem->baptise_status}}-blue" alt="Leads"></a>
                     <br>

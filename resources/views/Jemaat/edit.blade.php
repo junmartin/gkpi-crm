@@ -185,14 +185,18 @@
                     <td>
                         <input type="file" id="pass_photo" name="pass_photo" accept=".jpg,.jpeg,.png,.mp4,.avi,.mov">
                         <span id="error_message_media" style="color: red;"></span>
-                        <ul id="file_list" style="list-style: none; padding: 0;"></ul>
+                        <!-- <ul id="file_list" style="list-style: none; padding: 0;"></ul>
                         <ol>
                             <li>
                                 <a href="{{ Storage::url($jemaat->pass_photo) }}" target="_blank">
                                 {{ basename($jemaat->pass_photo) }}<br>
                                 </a>
                             </li>
-                        </ol>
+                        </ol> -->
+                        <?php 
+                            $jemaat_photo = ($jemaat->pass_photo !="") ? $jemaat->pass_photo : "storage/jemaat/file/no-image.jpg";
+                        ?>
+                        <img src="{{ asset($jemaat_photo) }}" width="50px" />
                     </td>
                 </tr>
             
@@ -202,6 +206,30 @@
     </span>
     <span style="float:left; width:33%">
         <table border="1" width="100%">
+            <thead>
+                <th colspan="2">Emergency Contact</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Name <small><em>(Jangan yang sekeluarga / serumah)</em></small></td>
+                    <td>
+                        <input type="text" id="emergency_contact_name" name="emergency_contact_name" maxlength="100" value="{{$jemaat->emergency_contact_name}}">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Mobile</td>
+                    <td>
+                        <input type="text" id="emergency_contact_mobile" name="emergency_contact_mobile" maxlength="100" value="{{$jemaat->emergency_contact_mobile}}">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Relationship</td>
+                    <td>
+                        <input type="text" id="emergency_contact_relation" name="emergency_contact_relation" maxlength="100" value="{{$jemaat->emergency_contact_relation}}">
+                    </td>
+                </tr>
+                
+            </tbody>
             <thead>
                 <th colspan="2">Marital Info</th>
             </thead>
@@ -245,7 +273,6 @@
                 <th colspan="2">Family</th>
             </thead>
             <tbody>
-                
                 <tr>
                     <td>Assign to Family</td>
                     <td>
@@ -276,8 +303,10 @@
                             <option value="Anak" <?php echo ($jemaat->role == "Anak") ? "selected" :"";?>> Anak
                         </select>
                     </td>
-                </tr
+                </tr>
             </tbody>
+
+            
         </table>        
     </span>
 
@@ -311,13 +340,13 @@
                     <td>Status</td>
                     <?php 
                         $member['permanen'] = ($jemaat->member_type == 'permanen') ? 'selected' : '';
-                        $member['partisipan'] = ($jemaat->member_type == 'partisipan') ? 'selected' : '';
+                        $member['simpatisan'] = ($jemaat->member_type == 'simpatisan') ? 'selected' : '';
 
                     ?>
                     <td colspan="2">
                         <select id="member_type" name="member_type" required>
+                            <option value="simpatisan" <?php echo $member['simpatisan'];?> >Simpatisan</option>
                             <option value="permanen" <?php echo $member['permanen'];?> >Jemaat Tetap</option>
-                            <option value="partisipan" <?php echo $member['partisipan'];?> >Partisipan</option>
                         </select>
                     </td>
                 </tr>
@@ -334,12 +363,11 @@
                     ?>
                     <td colspan="2">
                         <select id="baptise_status" name="baptise_status" required>
+                            <option value="Belum_Baptis" <?php echo $baptis['Belum_Baptis'];?>> Belum Baptis</option>
                             <option value="Baptis_Dewasa" <?php echo $baptis['Baptis_Dewasa'];?>> Baptis Dewasa</option>
                             <option value="Baptis_Anak" <?php echo $baptis['Baptis_Anak'];?>> Baptis Anak</option>
-                            <option value="Sidi" <?php echo $baptis['Sidi'];?>> Sidi</option>
-                            <option value="Atestasi" <?php echo $baptis['Atestasi'];?>> Atestasi</option>
-                            <option value="Belum_Baptis" <?php echo $baptis['Belum_Baptis'];?>> Belum Baptis</option>
                             <option value="Baptis_Gereja_Lain" <?php echo $baptis['Baptis_Gereja_Lain'];?>> Baptis Gereja Lain</option>
+                            <option value="Sidi" <?php echo $baptis['Sidi'];?>> Sidi</option>
                         </select>
                     </td>
                 </tr>

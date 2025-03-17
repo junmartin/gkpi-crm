@@ -34,7 +34,12 @@ class SermonController extends Controller
     public function create()
     {
         $ibadah = Ibadah::get();
-        $jemaats = Jemaat::get();
+        // $jemaats = Jemaat::get();
+        $jemaats = Jemaat::leftJoin('sermon_attendances', 'jemaats.id', '=', 'sermon_attendances.jemaat_id')
+            ->select('jemaats.*', \DB::raw('COUNT(sermon_attendances.jemaat_id) as total_attendance'))
+            ->groupBy('jemaats.id')
+            ->orderByDesc('total_attendance')
+            ->get();
         return view('Sermon/add',compact('jemaats','ibadah'));
     }
     

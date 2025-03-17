@@ -191,6 +191,30 @@
     <span style="float:left; width:33%">
         <table border="1" width="100%">
             <thead>
+                <th colspan="2">Emergency Contact</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>
+                        <input type="text" id="emergency_contact_name" name="emergency_contact_name" maxlength="100" value="{{$jemaat->emergency_contact_name}}">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Mobile</td>
+                    <td>
+                        <input type="text" id="emergency_contact_mobile" name="emergency_contact_mobile" maxlength="100" value="{{$jemaat->emergency_contact_mobile}}">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Relationship</td>
+                    <td>
+                        <input type="text" id="emergency_contact_relation" name="emergency_contact_relation" maxlength="100" value="{{$jemaat->emergency_contact_relation}}">
+                    </td>
+                </tr>
+                
+            </tbody>
+            <thead>
                 <th colspan="2">Marital Info</th>
             </thead>
             <tbody>
@@ -252,8 +276,8 @@
                     <td>Status</td>
                     <td colspan="2">
                         <select id="member_type" name="member_type" required>
+                            <option value="simpatisan">Simpatisan</option>
                             <option value="permanen">Jemaat Tetap</option>
-                            <option value="partisipan">Partisipan</option>
                         </select>
                     </td>
                 </tr>
@@ -261,12 +285,11 @@
                     <td>Status Baptis</td>
                     <td colspan="2">
                         <select id="baptise_status" name="baptise_status" required>
+                            <option value="Belum_Baptis"> Belum Baptis</option>
                             <option value="Baptis_Dewasa"> Baptis Dewasa</option>
                             <option value="Baptis_Anak"> Baptis Anak</option>
-                            <option value="Sidi"> Sidi</option>
-                            <option value="Atestasi"> Atestasi</option>
-                            <option value="Belum_Baptis"> Belum Baptis</option>
                             <option value="Baptis_Gereja_Lain"> Baptis Gereja Lain</option>
+                            <option value="Sidi"> Sidi</option>
                         </select>
                     </td>
                 </tr>
