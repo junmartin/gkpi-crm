@@ -131,7 +131,7 @@
 
                             <?php foreach ($arr_jemaat as $j=>$jem) { ?>
                                 <?php
-                                    $pass_photo = ($jem['pass_photo'] != "") ? $jem['pass_photo'] : "jemaat/file/no-image.jpg";
+                                    $pass_photo = ($jem['pass_photo'] != "") ? $jem['pass_photo'] : "storage/jemaat/file/no-image.jpg";
                                     $kelamin = ($jem['jenis_kelamin'] == "0") ? "L" : "P";
                                     $badge_color = ($jem['jenis_kelamin'] == "0") ? "primary" : "danger";
                                 ?>
