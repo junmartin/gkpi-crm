@@ -33,6 +33,6 @@ class UserRoleController extends Controller
 
         $user->syncRoles([$request->role]); // Remove old roles and assign new one
 
-        return redirect()->route('Users/index')->with('success', 'Role assigned successfully.');
+        return redirect()->route('users.index')->with('success', 'Role assigned successfully.');
     }
 }
