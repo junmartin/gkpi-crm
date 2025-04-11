@@ -79,6 +79,9 @@
     // Initialize defaults
     $chk_appraisal = $chk_archived = $chk_listed = $chk_sold = "";
     $chk_lakilaki = $chk_perempuan = "";
+
+    $chk_lansia = $chk_dewasa = $chk_pemuda = $chk_sekolah = "";
+
     $chk_type = [];
     $chk_city = [];
 
@@ -108,14 +111,20 @@
     $chk_sort_alphabet_desc = (!empty($param['sort']) && $param['sort'] == 'name_desc') ? "checked" : "";
     
     $chk_sort_input_desc = (!empty($param['sort']) && $param['sort'] == 'input_desc') ? "checked" : "";
+
+    $chk_lansia = (!empty($param['lansia'])) ? 'checked' : '';
+    $chk_dewasa = (!empty($param['dewasa'])) ? 'checked' : '';
+    $chk_pemuda = (!empty($param['pemuda'])) ? 'checked' : '';
+    $chk_sekolah = (!empty($param['sekolah'])) ? 'checked' : '';
     
 ?>
 
 <h3>Jemaat</h3>
 <form name="myForm" id="myForm" method="GET">
 <table border="1">
-    <th style="text-align:left; width:50%;"><b>Filter</b> <a href="javascript:void(0)" onclick="uncheck_all();">[clear filter]</a></th>
-    <th style="text-align:left; width:25%;"><b>Sorting</b></th>
+    <th style="text-align:left; width:30%;"><b>Filter</b> <a href="javascript:void(0)" onclick="uncheck_all();">[clear filter]</a></th>
+    <th style="text-align:left; width:30%;"><b>Filter</b></th>
+    <th style="text-align:left; width:40%;"><b>Sorting</b></th>
     <!-- <th style="text-align:left; width:25%;"><b>Column</b></th> -->
     <tbody>
 <?php
@@ -161,6 +170,23 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                         id="<?php //echo "city_".str_replace(' ', '_', $city);?>" <?php echo $chk_city[str_replace(' ', '_', $city)];?>> -->
                     <!-- <label for="<?php echo "city_".str_replace(' ', '_', $city);?>"> <?php echo ucfirst($city); ?></label> -->
                 <?php //} ?>
+
+            </td>
+            <td style="vertical-align: top;">
+                Kelompok Usia :
+                <input type="checkbox" class="refresh" name="lansia" value="1" id="lansia" <?php echo $chk_lansia;?>>
+                <label for="lansia">Lansia</label>
+
+                <input type="checkbox" class="refresh" name="dewasa" value="1" id="dewasa" <?php echo $chk_dewasa;?>>
+                <label for="dewasa">Dewasa</label>
+                
+                <br>
+                <input type="checkbox" class="refresh" name="pemuda" value="1" id="pemuda" <?php echo $chk_pemuda;?>>
+                <label for="pemuda">Pemuda</label>
+
+                <input type="checkbox" class="refresh" name="sekolah" value="1" id="sekolah" <?php echo $chk_sekolah;?>>
+                <label for="sekolah">Sekolah Minggu</label>
+                <br>
 
             </td>
             <td style="vertical-align: top;">
@@ -236,6 +262,8 @@ $cityParams = explode('|', $_GET['city'] ?? '');
             <th>Tgl Pernikahan</th> -->
 
             <!-- <th>Gereja Asal</th> -->
+
+            <th>Kontak Darurat</th>
             <th>Keterangan</th>
             <th>Action</th>
         </tr>
@@ -304,10 +332,14 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                 <!-- <td>{{$jem->spouse_name}}</td>
                 <td>{{$marriage_date}}</td>
                 <td>{{$jem->previous_church}}</td> -->
-
+                
                 <td>
                     {{$jem->family->family_name ?? '-'}}
                     <!-- <img src="https://img.shields.io/badge/Baptis-{{$jem->baptise_status}}-blue" alt="Keluarga"> -->
+                </td>
+                <td>
+                    <b>{{$jem->emergency_contact_relation}}<b><br>
+                    <b>{{$jem->emergency_contact_name}} {{$jem->emergency_contact_mobile}}<b>                    
                 </td>
                 <!-- <td>{{$jem->previous_church}}</td>  -->
 

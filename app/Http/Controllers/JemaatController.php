@@ -80,7 +80,12 @@ class JemaatController extends Controller
         if(empty($where_baptise_arr)){
             $where_baptise_arr = $baptise_default;
         }
-        
+
+        // Age Group Filter
+        // 0 - 12 = Sekolah Minggu
+        // 12 - 29 = Youth
+        // 30 - 55 = Dewasa
+        // > 55 = Lansia
 
         $jemaats = Jemaat::where(function (Builder $query) use ($where_lakilaki, $where_perempuan) {
             $query->where('jenis_kelamin', $where_lakilaki)
@@ -88,13 +93,22 @@ class JemaatController extends Controller
         })
         // ->whereIn('birth_place',$where_city_arr)
         ->whereIn('member_type',$where_status_arr)
-        ->whereIn('baptise_status',$where_baptise_arr)
-        // ->orderBy('family_id', 'asc')
-        // ->orderBy('role', 'desc')
-        // ->orderBy('name', 'asc')
-        // ->orderBy('id', 'desc')
+        ->whereIn('baptise_status',$where_baptise_arr)        
         ->with('family');
         // ->get();
+
+        if( !empty($param['lansia'])){
+            $jemaats->whereRaw("TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) > 55");
+        }
+        if( !empty($param['dewasa'])) {
+            $jemaats->WhereRaw("TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) BETWEEN 30 AND 55");
+        }        
+        if( !empty($param['pemuda'])) {
+            $jemaats->WhereRaw("TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) BETWEEN 12 AND 30");
+        }
+        if( !empty($param['sekolah'])) {
+            $jemaats->WhereRaw("TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) < 12");
+        }
 
         if( !empty($param['sort'])){
 
