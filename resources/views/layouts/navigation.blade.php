@@ -17,7 +17,7 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 
-                    <x-nav-link :href="route('jemaat.index')" :active="request()->routeIs('jemaat.index')">
+                    <x-nav-link :href="route('profile.index')" :active="request()->routeIs('profile.index')">
                         {{ __('Administration') }}
                     </x-nav-link>
                 </div>
