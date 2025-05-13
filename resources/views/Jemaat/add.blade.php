@@ -197,19 +197,19 @@
                 <tr>
                     <td>Name</td>
                     <td>
-                        <input type="text" id="emergency_contact_name" name="emergency_contact_name" maxlength="100" value="{{$jemaat->emergency_contact_name}}">
+                        <input type="text" id="emergency_contact_name" name="emergency_contact_name" maxlength="100" >
                     </td>
                 </tr>
                 <tr>
                     <td>Mobile</td>
                     <td>
-                        <input type="text" id="emergency_contact_mobile" name="emergency_contact_mobile" maxlength="100" value="{{$jemaat->emergency_contact_mobile}}">
+                        <input type="text" id="emergency_contact_mobile" name="emergency_contact_mobile" maxlength="100" >
                     </td>
                 </tr>
                 <tr>
                     <td>Relationship</td>
                     <td>
-                        <input type="text" id="emergency_contact_relation" name="emergency_contact_relation" maxlength="100" value="{{$jemaat->emergency_contact_relation}}">
+                        <input type="text" id="emergency_contact_relation" name="emergency_contact_relation" maxlength="100" >
                     </td>
                 </tr>
                 
