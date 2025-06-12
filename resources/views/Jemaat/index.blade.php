@@ -291,7 +291,7 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                     $today = new DateTime(); // Gets the current date
                     $age = $today->diff($birthDate)->y." tahun"; // Calculate the difference in years
                 }else{
-                    $age = "N/A";
+                    $age = "";
                 }
 
                 $marriage_date = (!empty($jem->marriage_date)) ? date('d M Y',strtotime($jem->marriage_date)) : "";
@@ -312,8 +312,6 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                                 <a href="{{ route('jemaat.show', $jem->id)}}" style="text-decoration:none;">
                                     <span class="badge" style="vertical-align:top; margin-top:5px;">
                                         <span class="badge-key">{{$kelamin}}</span><span class="badge-value-{{$badge_color}}">{{$jem->name}}</span>
-                                        <!-- <span class="badge-key">{{$jem->name}}</span><span class="badge-value-{{$badge_color}}">{{$jem->nick_name}}</span> -->
-                                        <!-- <span class="badge-key">{{$age. "thn"}}</span><span class="badge-value-{{$badge_color}}">{{$jem->name}}</span> -->
                                     </span>
                                 </a>
                             </td>
@@ -324,7 +322,7 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                     </table>
                 </td>
                 
-                <td>{{$jem->birth_place}}, {{(!empty($jem->birth_date)) ? date('d-M-Y',strtotime($jem->birth_date)) : "N/A"}}</td>
+                <td>{{(!empty($jem->birth_place)) ? $jem->birth_place : "(no info)" }}, {{(!empty($jem->birth_date)) ? date('d-M-Y',strtotime($jem->birth_date)) : "(no info)"}}</td>
                 <td>{{$jem->mobile_no}}<br>{{$jem->email}}</td>
                 <td>{{$jem->address}}</td>
                 <!-- <td>{{$status_kawin[$jem->marital_status]}}</td> -->
@@ -338,8 +336,8 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                     <!-- <img src="https://img.shields.io/badge/Baptis-{{$jem->baptise_status}}-blue" alt="Keluarga"> -->
                 </td>
                 <td>
-                    <b>{{$jem->emergency_contact_relation}}<b><br>
-                    <b>{{$jem->emergency_contact_name}} {{$jem->emergency_contact_mobile}}<b>                    
+                    <b>{{$jem->emergency_contact_name}} {{$jem->emergency_contact_mobile}}</b><br>
+                    <small>{{$jem->emergency_contact_relation}}</small>
                 </td>
                 <!-- <td>{{$jem->previous_church}}</td>  -->
 

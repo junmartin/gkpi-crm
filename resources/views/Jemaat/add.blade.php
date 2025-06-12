@@ -135,8 +135,8 @@
                 <tr>
                     <td>Jenis Kelamin</td>
                     <td>
-                        <input type="radio" id="jenis_kelamin" name="jenis_kelamin" value="0"> Laki-laki<br>
-                        <input type="radio" id="jenis_kelamin" name="jenis_kelamin" value="1"> Perempuan
+                        <input type="radio" id="jenis_kelamin_laki" name="jenis_kelamin" value="0" required> <label for="jenis_kelamin_laki">Laki-laki</label><br>
+                        <input type="radio" id="jenis_kelamin_perempuan" name="jenis_kelamin" value="1" required> <label for="jenis_kelamin_perempuan">Perempuan</label>
                     </td>
                 </tr>
                 <tr>
