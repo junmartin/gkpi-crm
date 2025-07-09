@@ -97,17 +97,21 @@ class JemaatController extends Controller
         ->with('family');
         // ->get();
 
-        if( !empty($param['lansia'])){
-            $jemaats->whereRaw("TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) > 55");
-        }
-        if( !empty($param['dewasa'])) {
-            $jemaats->WhereRaw("TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) BETWEEN 30 AND 55");
-        }        
-        if( !empty($param['pemuda'])) {
-            $jemaats->WhereRaw("TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) BETWEEN 12 AND 30");
-        }
-        if( !empty($param['sekolah'])) {
-            $jemaats->WhereRaw("TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) < 12");
+        if (!empty($param['lansia']) || !empty($param['dewasa']) || !empty($param['pemuda']) || !empty($param['sekolah'])) {
+            $jemaats->where(function ($query) use ($param) {
+                if (!empty($param['lansia'])) {
+                    $query->orWhereRaw("TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) > 55");
+                }
+                if (!empty($param['dewasa'])) {
+                    $query->orWhereRaw("TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) BETWEEN 30 AND 55");
+                }
+                if (!empty($param['pemuda'])) {
+                    $query->orWhereRaw("TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) BETWEEN 12 AND 30");
+                }
+                if (!empty($param['sekolah'])) {
+                    $query->orWhereRaw("TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) < 12");
+                }
+            });
         }
 
         if( !empty($param['sort'])){
