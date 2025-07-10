@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Jemaat;
 use App\Models\Family;
+use App\Models\Sermon;
+use App\Models\SermonAttendance;
 
 use Illuminate\Database\Eloquent\Builder;
 
@@ -138,9 +140,31 @@ class JemaatController extends Controller
         $jemaats->orderBy('id', 'desc');
         $jemaats = $jemaats->get();
 
-        // dd($jemaats);
+        // Get the last 20 sermon IDs with ibadah_id = 1
+        $sermon_ids = Sermon::where('ibadah_id', 1)
+                            ->orderBy('sermon_date', 'desc')
+                            ->take(20)
+                            ->pluck('id');
 
-        return view('Jemaat/index',compact('jemaats','param','distinct_city','distinct_status','distinct_baptise'));
+        // Get all sermon attendances for those sermons
+        $sermon_attendances = SermonAttendance::whereIn('sermon_id', $sermon_ids)
+                                                ->get();
+
+        // Calculate attendance for each jemaat
+        $attendance_data = [];
+        $total_sermons = count($sermon_ids);
+        foreach ($jemaats as $jemaat) {
+            $attendance_count = $sermon_attendances->where('jemaat_id', $jemaat->id)->count();
+            $attendance_percentage = ($total_sermons > 0) ? ($attendance_count / $total_sermons) * 100 : 0;
+
+            $attendance_data[$jemaat->id] = [
+                'count' => $attendance_count,
+                'total' => $total_sermons,
+                'percentage' => round($attendance_percentage)
+            ];
+        }
+        
+        return view('Jemaat/index',compact('jemaats','param','distinct_city','distinct_status','distinct_baptise', 'attendance_data'));
         // return view('jemaat',compact('jemaats'));
     }
 
@@ -149,7 +173,8 @@ class JemaatController extends Controller
      */
     public function create()
     {
-        return view('Jemaat/add');
+        $sermons = Sermon::orderBy('sermon_date', 'desc')->take(3)->get();
+        return view('Jemaat/add', compact('sermons'));
     }
 
     /**
@@ -172,8 +197,9 @@ class JemaatController extends Controller
 
             $filePath = "";
             if($request->hasFile('pass_photo')) {
-                $filePath = 'jemaat/file/' . $request->file('pass_photo')->getClientOriginalName();
-                Storage::disk('public')->put($filePath,file_get_contents($request->file('pass_photo')));
+                $path = 'jemaat/file/' . $request->file('pass_photo')->getClientOriginalName();
+                Storage::disk('public')->put($path,file_get_contents($request->file('pass_photo')));
+                $filePath = 'storage/' . $path;
             }
 
             if (empty($request['nick_name'])) {
@@ -200,10 +226,20 @@ class JemaatController extends Controller
                 "baptise_status" => $request['baptise_status'],
                 "previous_church" => $request['previous_church'],
                 "remark" => $request['remark'],
-                "pass_photo" => 'storage/'.$filePath,
+                "pass_photo" => $filePath,
                 "create_by" => auth()->id()
             ];
-            Jemaat::create($jemaat);
+            $new_jemaat = Jemaat::create($jemaat);
+
+            if (isset($request->sermons)) {
+                foreach ($request->sermons as $sermon_id) {
+                    SermonAttendance::create([
+                        'sermon_id' => $sermon_id,
+                        'jemaat_id' => $new_jemaat->id,
+                        'attendance' => 1,
+                    ]);
+                }
+            }
 
             DB::commit();
             Log::info('Data saved');
@@ -234,7 +270,10 @@ class JemaatController extends Controller
     {
         $family = Family::get();
         $jemaat = Jemaat::find($id);
-        return view('Jemaat/edit', compact('jemaat','family'));
+        $sermons = Sermon::orderBy('sermon_date', 'desc')->take(10)->get();
+        $sermon_attendances = SermonAttendance::where('jemaat_id', $id)->pluck('sermon_id')->toArray();
+
+        return view('Jemaat/edit', compact('jemaat','family', 'sermons', 'sermon_attendances'));
     }
 
     /**
@@ -255,11 +294,7 @@ class JemaatController extends Controller
 
         try {
             DB::beginTransaction();
-            $filePath = "";
-            // if($request->hasFile('pass_photo')) {
-            //     $filePath = 'jemaat/file/' . $request->file('pass_photo')->getClientOriginalName();
-            //     Storage::disk('public')->put($filePath, file_get_contents($request->file('pass_photo')));
-            // }
+            
             $nick_name = "";
             if (empty($request['nick_name'])) {
                 $nick_name = $request['name'];
@@ -296,12 +331,28 @@ class JemaatController extends Controller
             $jemaat->update($jemaat_updated);
 
             if($request->hasFile('pass_photo')){
-                $filePath = 'jemaat/file/' . $request->file('pass_photo')->getClientOriginalName();
-                Storage::disk('public')->put($filePath, file_get_contents($request->file('pass_photo')));
+                $path = 'jemaat/file/' . $request->file('pass_photo')->getClientOriginalName();
+                Storage::disk('public')->put($path, file_get_contents($request->file('pass_photo')));
+                $filePath = 'storage/' . $path;
 
-                $jemaat_foto = ["pass_photo" => 'storage/'.$filePath];
-                $jemaat_2 = Jemaat::findOrFail($id);
-                $jemaat_2->update($jemaat_foto);
+                $jemaat_foto = ["pass_photo" => $filePath];
+                $jemaat->update($jemaat_foto);
+            }
+
+            // Handle Sermon Attendance
+            $last_ten_sermons_ids = Sermon::orderBy('sermon_date', 'desc')->take(10)->pluck('id');
+            SermonAttendance::where('jemaat_id', $id)->whereIn('sermon_id', $last_ten_sermons_ids)->delete();
+
+            if (isset($request->sermons)) {
+                foreach ($request->sermons as $sermon_id) {
+                    if(in_array($sermon_id, $last_ten_sermons_ids->toArray())) {
+                        SermonAttendance::create([
+                            'sermon_id' => $sermon_id,
+                            'jemaat_id' => $id,
+                            'attendance' => 1,
+                        ]);
+                    }
+                }
             }
             
             DB::commit();

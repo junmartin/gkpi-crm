@@ -12,6 +12,10 @@
         background-color: #f1f1f1;
     }
 
+    .modal-content tr:hover {
+        background-color: transparent;
+    }
+
     td {
         padding:5px 2px;
         /* padding: 10px; */
@@ -73,6 +77,65 @@
         background:#0F80c1;color:#fff;
         background: linear-gradient(#c10e80, #B40273);
     }    
+
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        width: 70%;
+        position: relative;
+        z-index: 1;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .modal-content::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('/storage/logo-gereja.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        opacity: 0.3;
+        z-index: -1;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
 </style>
 
 <?php 
@@ -264,7 +327,9 @@ $cityParams = explode('|', $_GET['city'] ?? '');
             <!-- <th>Gereja Asal</th> -->
 
             <th>Kontak Darurat</th>
+            <!-- <th>Ultah Perkawinan</th> -->
             <th>Keterangan</th>
+            <th>Kehadiran</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -278,6 +343,11 @@ $cityParams = explode('|', $_GET['city'] ?? '');
             $status_kawin['M'] = "Meninggal";
             $status_kawin['CM'] = "Cerai/Mati";
             $status_kawin['CH'] = "Cerai/Hidup";
+
+            $member['simpatisan']['name'] = 'Simpatisan';   
+            $member['simpatisan']['color'] = 'orange';   
+            $member['permanen']['name'] = 'Jemaat Tetap';   
+            $member['permanen']['color'] = 'green';
         ?>
 
         @foreach($jemaats as $jem)
@@ -304,9 +374,9 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                     <table style="border:0px;">
                         <tr style="height:20px;">
                             <td rowspan="2" style="vertical-align:top; width:45px;">
-                                <a href="{{ route('jemaat.show', $jem->id)}}" style="text-decoration:none;">
+                                <div style="cursor:pointer;" onclick="show_modal('{{$jem->name}}', '{{ asset($pass_photo) }}', '{{$jem->birth_place}}', '{{ date('d-M-Y',strtotime($jem->birth_date)) }}', '{{$jem->mobile_no}}', '{{$jem->email}}', '{{$jem->address}}', '{{$status_kawin[$jem->marital_status]}}', '{{$jem->spouse_name}}', '{{$marriage_date}}', '{{$jem->previous_church}}', '{{$jem->emergency_contact_name}}', '{{$jem->emergency_contact_mobile}}', '{{$jem->emergency_contact_relation}}', '{{$member[$jem->member_type]['name']}}', '{{$jem->baptise_status}}')">
                                     <img src="{{ asset($pass_photo) }}" width="40px" />
-                                </a>
+                                </div>
                             </td>
                             <td>
                                 <a href="{{ route('jemaat.show', $jem->id)}}" style="text-decoration:none;">
@@ -339,14 +409,9 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                     <b>{{$jem->emergency_contact_name}} {{$jem->emergency_contact_mobile}}</b><br>
                     <small>{{$jem->emergency_contact_relation}}</small>
                 </td>
+                <!-- <td>{{$marriage_date}}</td> -->
                 <!-- <td>{{$jem->previous_church}}</td>  -->
 
-                <?php 
-                    $member['simpatisan']['name'] = 'Simpatisan';   
-                    $member['simpatisan']['color'] = 'orange';   
-                    $member['permanen']['name'] = 'Jemaat Tetap';   
-                    $member['permanen']['color'] = 'green';
-                ?>
                 <td style="font-size:small; line-height:1;">
                     <a href="#"><img src="https://img.shields.io/badge/Status-{{ucfirst($member[$jem->member_type]['name'])}}-{{$member[$jem->member_type]['color']}}" alt="Inquiries"></a>
                     <br>
@@ -354,6 +419,13 @@ $cityParams = explode('|', $_GET['city'] ?? '');
                     <br>
                     <?php echo (!empty($jem->previous_church)) ? "Gereja Asal: ".$jem->previous_church : "";?>
                             
+                </td>
+                <td>
+                    @if(isset($attendance_data[$jem->id]))
+                        {{ $attendance_data[$jem->id]['count'] }} / {{ $attendance_data[$jem->id]['total'] }} ({{ $attendance_data[$jem->id]['percentage'] }}%)
+                    @else
+                        0 / {{ $attendance_data[array_key_first($attendance_data)]['total'] ?? 0 }} (0%)
+                    @endif
                 </td>
                 <td style="text-align:center;">
                     <!-- <a href="{{ route('jemaat.edit', $jem->id)}}">[ View ]</a>
@@ -366,7 +438,46 @@ $cityParams = explode('|', $_GET['city'] ?? '');
     </tbody>
 </table>
 
-
+<!-- The Modal -->
+<div id="myModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 style="text-align:center;">GKPI Griya Permata</h2>
+    <hr>
+    <table width="100%">
+        <tr>
+            <td width="20%" style="vertical-align: top;">
+                <img id="modal_img" src="" width="100%"/>
+                <div style="background: rgba(239,132,199,0.4);">
+                    <em>Status Perkawinan:</em> <br><b><span id="modal_marital_status"></span></b><br><br>
+                    <em>Nama Pasangan:</em> <br><b><span id="modal_spouse_name"></span></b><br><br>
+                    <em>Tgl Pernikahan:</em> <br><b><span id="modal_marriage_date"></span></b><br><br>
+                </div>
+            </td>
+            <td width="80%" style="vertical-align: top;">
+                <table width="100%">
+                    <tr>
+                        <td width="50%" style="vertical-align:top;">
+                            <em>Nama:</em> <br><b><span id="modal_name"></span></b><br><br>
+                            <em>Tempat/Tgl Lahir:</em> <br><b><span id="modal_birth_place"></span></b>, <b><span id="modal_birth_date"></span></b><br><br>
+                            <em>No. HP:</em> <br><b><span id="modal_mobile_no"></span></b><br><br>
+                            <em>Email:</em> <br><b><span id="modal_email"></span></b><br><br>
+                            <em>Alamat:</em> <br><b><span id="modal_address"></span></b><br><br>
+                        </td>
+                        <td width="50%" style="vertical-align:top;">
+                            <em>Gereja Asal:</em> <br><b><span id="modal_previous_church"></span></b><br><br>
+                            <em>Kontak Darurat:</em> <br><b><span id="modal_emergency_contact_name"></span></b> (<b><span id="modal_emergency_contact_relation"></span></b>) <b><span id="modal_emergency_contact_mobile"></span></b><br><br>
+                            <em>Status Keanggotaan:</em> <br><b><span id="modal_member_type"></span></b><br><br>
+                            <em>Status Baptis:</em> <br><b><span id="modal_baptise_status"></span></b><br><br>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+  </div>
+</div>
 
 <script>
 
@@ -386,6 +497,45 @@ $cityParams = explode('|', $_GET['city'] ?? '');
             checkboxes[i].checked = false;
         }
         document.forms[0].submit();
+    }
+
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on the button, open the modal
+    function show_modal(name, pass_photo, birth_place, birth_date, mobile_no, email, address, marital_status, spouse_name, marriage_date, previous_church, emergency_contact_name, emergency_contact_mobile, emergency_contact_relation, member_type, baptise_status) {
+        modal.style.display = "block";
+        document.getElementById('modal_img').src = pass_photo;
+        document.getElementById('modal_name').innerHTML = name;
+        document.getElementById('modal_birth_place').innerHTML = birth_place;
+        document.getElementById('modal_birth_date').innerHTML = birth_date;
+        document.getElementById('modal_mobile_no').innerHTML = mobile_no;
+        document.getElementById('modal_email').innerHTML = email;
+        document.getElementById('modal_address').innerHTML = address;
+        document.getElementById('modal_marital_status').innerHTML = marital_status;
+        document.getElementById('modal_spouse_name').innerHTML = spouse_name;
+        document.getElementById('modal_marriage_date').innerHTML = marriage_date;
+        document.getElementById('modal_previous_church').innerHTML = previous_church;
+        document.getElementById('modal_emergency_contact_name').innerHTML = emergency_contact_name;
+        document.getElementById('modal_emergency_contact_mobile').innerHTML = emergency_contact_mobile;
+        document.getElementById('modal_emergency_contact_relation').innerHTML = emergency_contact_relation;
+        document.getElementById('modal_member_type').innerHTML = member_type;
+        document.getElementById('modal_baptise_status').innerHTML = baptise_status;
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
     }
 </script>
 

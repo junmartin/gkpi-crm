@@ -306,6 +306,21 @@
                     </td>
                 </tr>
         </table>
+        <table border="1" width="100%">
+            <thead>
+                <th colspan="2">Sermon Attendance (Last 3)</th>
+            </thead>
+            <tbody>
+                @foreach($sermons as $sermon)
+                    <tr>
+                        <td>{{ $sermon->sermon_date }} - {{ $sermon->ibadah_name }}</td>
+                        <td>
+                            <input type="checkbox" name="sermons[]" value="{{ $sermon->id }}">
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </span>
 </div>
 <div style="text-align:right;">
