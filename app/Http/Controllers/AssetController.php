@@ -210,10 +210,6 @@ class AssetController extends Controller
                 'tipe' => $request['tipe'],
                 'spec' => $request['spec'],
                 'acquired_date' => $request['acquired_date'],
-                // 'status' => $request['status'],
-                // 'location' => $request['location'],
-                // 'pic' => $request['pic'],
-                // 'ownership' => $request['ownership'],
                 'update_by' => auth()->id()
             ];
             $post = Asset::findOrFail($asset['id']);

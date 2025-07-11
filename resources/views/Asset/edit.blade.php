@@ -78,7 +78,7 @@
 
 <h3>Update Asset</h3>
 
-<form id="form" action="{{ route('asset.update_status', $asset->id) }}" method="POST" enctype="multipart/form-data">
+<form id="form" action="{{ route('asset.update', $asset->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
 
