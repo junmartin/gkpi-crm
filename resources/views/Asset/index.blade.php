@@ -9,9 +9,9 @@
         /* margin-bottom: 20px; */
         border: 1px solid black;
     }
-    tr:hover {
-        background-color: #f1f1f1;
-    }
+    tr {
+            background-color: #f1f1f1;
+        }
 
     td {
         padding:3px 3px;
@@ -132,6 +132,10 @@
         $chk_stat[$s] = (!empty($param['stat_'.$s])) ? "checked" : "";
     }
     
+    foreach ($locations as $loc){
+        $key = 'loc_' . str_replace(' ', '_', $loc['location']);
+        $chk_loc[$loc['location']] = (!empty($param[$key])) ? "checked" : "";
+    }
 
 ?>
 
@@ -153,6 +157,14 @@
                 <?php foreach ($asset_status as $s => $sts) { ?>
                     <input type="checkbox" class="refresh" name="<?php echo "stat_".$s;?>" id="<?php echo "stat_".$s;?>" value="1" <?php echo $chk_stat[$s];?>>
                     <label for="<?php echo "stat_".$s;?>"><?php echo $sts;?></label>
+                <?php }?>
+                <br>
+                Location:
+                <?php foreach ($locations as $loc) { 
+                    $key = 'loc_' . str_replace(' ', '_', $loc['location']);
+                ?>
+                    <input type="checkbox" class="refresh" name="<?php echo $key;?>" id="<?php echo $key;?>" value="1" <?php echo $chk_loc[$loc['location']];?>>
+                    <label for="<?php echo $key;?>"><?php echo $loc['location'];?></label>
                 <?php }?>
             </td>
         </tr>
@@ -187,22 +199,11 @@
             <tr>
                 
                 <td style="vertical-align:top">
-                    <table style="border:0px;">
-                        <tr style="height:20px;">
-                            <td style="vertical-align:top; width:45px;">
-                                <?php $asset_photo = ($ast->asset_photo->isNotEmpty()) ? $ast->asset_photo->first()->asset_photo : "storage/jemaat/file/no-image.jpg";?>
-                                <img src="{{ asset($asset_photo) }}" width="50px"/>
-                                
-                            </td>
-                            <td style="vertical-align:top;">
-                                <a href="{{ route('asset.edit', $ast['id'])}}" style="text-decoration:none;">
-                                    <span class="badge" style="vertical-align:top; margin-top:5px;">
-                                        <span class="badge-key">{{$ast->asset_type->name}}</span><span class="badge-value-primary">{{$ast['name']}}</span>
-                                    </span>
-                                </a>
-                            </td>
-                        </tr>
-                    </table>
+                    <a href="{{ route('asset.edit', $ast['id'])}}" style="text-decoration:none;">
+                        <span class="badge" style="vertical-align:top; margin-top:5px;">
+                            <span class="badge-key">{{$ast->asset_type->name}}</span><span class="badge-value-primary">{{$ast['name']}}</span>
+                        </span>
+                    </a>
                 </td>
                 <td style="vertical-align:top;">
                     {{$ast['ownership'] ? $ast['ownership'] : 'GKPI-GP'}}
@@ -216,24 +217,23 @@
                     </span> 
                     <?php }?>
                 </td>
-                <td style="vertical-align:top;">
-                    <?php $show_stat = ($ast['status']) ? true : false ;?>
-                    <?php if($show_stat){?>
-                    <span class="badge" style="vertical-align:top; margin-top:5px;">
-                        <span class="badge-key">Status</span><span class="badge-value-{{$asset_color[$ast->status]}}">{{$asset_status[$ast->status]}}</span>
-                    </span>
-                    <?php }?>
+                <td style="vertical-align:top; width: 250px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <?php $show_stat = ($ast['status']) ? true : false ;?>
+                        <?php if($show_stat){?>
+                        <span class="badge" style="vertical-align:top; margin-top:5px;">
+                            <span class="badge-key">Status</span><span class="badge-value-{{$asset_color[$ast->status]}}">{{$asset_status[$ast->status]}}</span>
+                        </span>
+                        <?php }?>
 
-                    
-                    <?php $show_loc = ($ast['location']) ? true : false ;?>
-                    <?php if($show_loc){?>
-                    <br>
-                    <span class="badge" style="vertical-align:top; margin-top:5px;">
-                        <span class="badge-key">Location</span><span class="badge-value-primary">{{$ast['location']}}</span>
-                    </span>
-                    <?php }?>
-                    
-                    
+                        
+                        <?php $show_loc = ($ast['location']) ? true : false ;?>
+                        <?php if($show_loc){?>
+                        <span class="badge" style="vertical-align:top; margin-top:5px;">
+                            <span class="badge-key">Location</span><span class="badge-value-primary">{{$ast['location']}}</span>
+                        </span>
+                        <?php }?>
+                    </div>
                 </td>
                 <!-- <td style="vertical-align:top;">{{$ast['merk']}}</td>
                 <td style="vertical-align:top;">{{$ast['model']}}</td>
@@ -292,8 +292,10 @@
                     @endif
                 </td>
                 <td style="vertical-align:top;text-align:left;">
-                    <a href="{{ route('asset.edit', $ast->id)}}">[Edit]</a><br><br>
-                    <a href="{{ route('asset.edit_status', $ast->id)}}">[Change Ownership & Status]</a>
+                    <div style="display: flex; justify-content: space-between;">
+                        <a href="{{ route('asset.edit', $ast->id)}}">[Edit Spec.]&nbsp;</a>
+                        <a href="{{ route('asset.edit_status', $ast->id)}}">&nbsp;[Chg.Loc/Stat/PIC/Owner]</a>
+                    </div>
                 </td>
 
             </tr>

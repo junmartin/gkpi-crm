@@ -35,6 +35,7 @@ class AssetController extends Controller
         $asset_status['dmg'] = "Damage/Broken";        
         
         $asset_type = AssetType::get();
+        $locations = Asset::select('location')->distinct()->whereNotNull('location')->get();
 
         // Type Filter
         $where_type_arr = [];
@@ -62,6 +63,20 @@ class AssetController extends Controller
         if(empty($where_stat_arr)){
             $where_stat_arr = $stat_default;
         }
+
+        // Location Filter
+        $where_loc_arr = [];
+        $loc_default = [];
+        foreach($locations as $loc) {
+            $key = 'loc_' . str_replace(' ', '_', $loc['location']);
+            if( !empty($param[$key])){
+                array_push($where_loc_arr,$loc['location']);
+            }
+            array_push($loc_default, $loc['location']);
+        }
+        if(empty($where_loc_arr)){
+            $where_loc_arr = $loc_default;
+        }
         
 
         $assets = Asset::with([
@@ -73,6 +88,8 @@ class AssetController extends Controller
         ])
         ->whereIn('type_id',$where_type_arr)
         ->whereIn('status',$where_stat_arr)
+        ->whereIn('location',$where_loc_arr)
+        ->orderBy('id','desc')
         ->get()
         ->each(function($asset){
             $lastMaintenance = $asset->maintenance->first();
@@ -97,7 +114,7 @@ class AssetController extends Controller
 
 
         // return view('Asset/index',compact('param','assets','asset_type'));
-        return view('Asset/index',array_merge(compact('param','asset_type'),['assets'=>collect($assets)]));
+        return view('Asset/index',array_merge(compact('param','asset_type','locations'),['assets'=>collect($assets)]));
     }
 
     /**
