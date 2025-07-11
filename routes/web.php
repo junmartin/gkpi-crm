@@ -12,6 +12,7 @@ use App\Http\Controllers\SermonController;
 use App\Http\Controllers\AssetTypeController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AssetMaintController;
+use App\Http\Controllers\AssetBookingController;
 // use App\Http\Controllers\AssetPhotoController;
 
 use App\Http\Controllers\UserRoleController;
@@ -84,6 +85,11 @@ Route::middleware(['auth', 'verified', 'permission:access_asset_menu'])->group(f
 // access_maintenance_menu
 Route::middleware(['auth', 'verified', 'permission:access_maintenance_menu'])->group(function(){
     Route::resource('asset_maint',AssetMaintController::class)->middleware(['auth','verified']);
+});
+
+// access_asset_booking_menu
+Route::middleware(['auth', 'verified'])->group(function(){
+    Route::resource('assetbooking',AssetBookingController::class);
 });
 
 

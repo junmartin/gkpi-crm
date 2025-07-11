@@ -22,6 +22,7 @@
             <a href="{{ route('asset_type.index')}}">Tipe Asset</a> |
             <a href="{{ route('asset.index')}}">Asset</a> |
             <a href="{{ route('asset_maint.index')}}">Asset Maintenance</a> |
+            <a href="{{ route('assetbooking.index')}}">Asset Booking</a> |
             <br>
         </div>
         <div>

@@ -18,5 +18,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('access-attendance-menu', function ($user) {
             return $user->hasPermissionTo('access_attendance_menu');
         });
+
+        Gate::define('access-asset-booking-menu', function ($user) {
+            return $user->hasPermissionTo('access_asset_booking_menu');
+        });
     }
 }
