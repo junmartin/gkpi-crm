@@ -78,8 +78,9 @@ class AssetController extends Controller
             $where_loc_arr = $loc_default;
         }
         
+        $sort_by = $request->input('sort_by', 'last_input'); // Default to 'last_input'
 
-        $assets = Asset::with([
+        $assets_query = Asset::with([
             'asset_type',
             'asset_photo',
             'maintenance' => function($query) {
@@ -88,9 +89,19 @@ class AssetController extends Controller
         ])
         ->whereIn('type_id',$where_type_arr)
         ->whereIn('status',$where_stat_arr)
-        ->whereIn('location',$where_loc_arr)
-        ->orderBy('id','desc')
-        ->get()
+        ->whereIn('location',$where_loc_arr);
+
+        if ($sort_by == 'first_input') {
+            $assets_query->orderBy('id','asc');
+        } elseif ($sort_by == 'last_input') {
+            $assets_query->orderBy('id','desc');
+        } elseif ($sort_by == 'a_z') {
+            $assets_query->orderBy('name','asc');
+        } elseif ($sort_by == 'z_a') {
+            $assets_query->orderBy('name','desc');
+        }
+
+        $assets = $assets_query->get()
         ->each(function($asset){
             $lastMaintenance = $asset->maintenance->first();
             return [

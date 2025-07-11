@@ -137,6 +137,8 @@
         $chk_loc[$loc['location']] = (!empty($param[$key])) ? "checked" : "";
     }
 
+    $sort_by = $param['sort_by'] ?? 'last_input';
+
 ?>
 
 <h3>Asset</h3>
@@ -166,6 +168,16 @@
                     <input type="checkbox" class="refresh" name="<?php echo $key;?>" id="<?php echo $key;?>" value="1" <?php echo $chk_loc[$loc['location']];?>>
                     <label for="<?php echo $key;?>"><?php echo $loc['location'];?></label>
                 <?php }?>
+            </td>
+            <td style="vertical-align:top">
+                <input type="radio" class="refresh" name="sort_by" id="sort_first_input" value="first_input" {{ $sort_by == 'first_input' ? 'checked' : '' }}>
+                <label for="sort_first_input">First Input</label><br>
+                <input type="radio" class="refresh" name="sort_by" id="sort_last_input" value="last_input" {{ $sort_by == 'last_input' ? 'checked' : '' }}>
+                <label for="sort_last_input">Last Input</label><br>
+                <input type="radio" class="refresh" name="sort_by" id="sort_a_z" value="a_z" {{ $sort_by == 'a_z' ? 'checked' : '' }}>
+                <label for="sort_a_z">A-Z</label><br>
+                <input type="radio" class="refresh" name="sort_by" id="sort_z_a" value="z_a" {{ $sort_by == 'z_a' ? 'checked' : '' }}>
+                <label for="sort_z_a">Z-A</label>
             </td>
         </tr>
     </tbody>
