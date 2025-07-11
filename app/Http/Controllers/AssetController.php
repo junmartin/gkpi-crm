@@ -300,4 +300,77 @@ class AssetController extends Controller
     {
         //
     }
+
+    public function public_report(Request $request)
+    {
+        $param = $request->all();
+
+        $asset_status['new'] = "New";
+        $asset_status['use'] = "In Use";
+        $asset_status['oos'] = "Out of Service";
+        $asset_status['sto'] = "In Storage";
+        $asset_status['dis'] = "Disposed";
+        $asset_status['los'] = "Lost/Stolen";
+        $asset_status['dmg'] = "Damage/Broken";
+
+        $asset_type = AssetType::get();
+        $locations = Asset::select('location')->distinct()->whereNotNull('location')->get();
+
+        // Type Filter
+        $where_type_arr = [];
+        $type_default = [];
+        foreach($asset_type as $type) {
+            if( !empty($param['type_'.$type['id']])){
+                array_push($where_type_arr,$type['id']);
+            }
+            array_push($type_default, $type['id']);
+        }
+        if(empty($where_type_arr)){
+            $where_type_arr = $type_default;
+        }
+
+        // Type Status
+        $where_stat_arr = [];
+        $stat_default = ['new','use','oos','sto','dis','los','dmg'];
+        //$stat_default = [];
+        foreach($asset_status as $s => $stat) {
+            if( !empty($param['stat_'.$s])){
+                array_push($where_stat_arr,$s);
+            }
+            array_push($type_default, $s);
+        }
+        if(empty($where_stat_arr)){
+            $where_stat_arr = $stat_default;
+        }
+
+        // Location Filter
+        $where_loc_arr = [];
+        $loc_default = [];
+        foreach($locations as $loc) {
+            $key = 'loc_' . str_replace(' ', '_', $loc['location']);
+            if( !empty($param[$key])){
+                array_push($where_loc_arr,$loc['location']);
+            }
+            array_push($loc_default, $loc['location']);
+        }
+        if(empty($where_loc_arr)){
+            $where_loc_arr = $loc_default;
+        }
+
+
+        $assets = Asset::with([
+            'asset_type',
+            'created_by',
+            'updated_by'
+        ])
+        ->whereIn('type_id',$where_type_arr)
+        ->whereIn('status',$where_stat_arr)
+        ->whereIn('location',$where_loc_arr)
+        ->orderBy('id','desc')
+        ->get();
+
+        $timestamp = Carbon::now()->toDateTimeString();
+
+        return view('Asset/public_report',compact('assets','asset_status','timestamp'));
+    }
 }

@@ -173,6 +173,7 @@
 </form>
 <br>
 <a href="{{ route('asset.create')}}">[+ Add New]</a>
+<a href="{{ route('asset.public_report', request()->query()) }}" target="_blank">[Generate Public Link]</a>
 <table border="1">
     <thead>
         <tr>

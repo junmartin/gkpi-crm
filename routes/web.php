@@ -75,6 +75,8 @@ Route::middleware(['auth', 'verified', 'permission:access_attendance_menu'])->gr
     Route::resource('ibadah',IbadahController::class)->middleware(['auth','verified']);
 });
 
+Route::get('/asset/public_report', [AssetController::class, 'public_report'])->name('asset.public_report');
+
 // access_asset_menu
 Route::middleware(['auth', 'verified', 'permission:access_asset_menu'])->group(function(){
     Route::resource('asset',AssetController::class)->middleware(['auth','verified']);

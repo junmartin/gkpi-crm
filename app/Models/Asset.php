@@ -40,4 +40,14 @@ class Asset extends Model
     public function asset_photo(){
         return $this->hasMany(AssetPhoto::class);
     }
+
+    public function created_by()
+    {
+        return $this->belongsTo(User::class, 'create_by');
+    }
+
+    public function updated_by()
+    {
+        return $this->belongsTo(User::class, 'update_by');
+    }
 }
