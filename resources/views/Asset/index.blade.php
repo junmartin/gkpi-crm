@@ -192,7 +192,8 @@
             <th>Asset</th>
             <th>Owned By</th>
             <th>PIC</th>
-            <th>Status/Location</th>
+            <th>Status</th>
+            <th>Location</th>
             <!-- <th>Merk</th>
             <th>Model</th>
             <th>Tipe</th>
@@ -225,26 +226,23 @@
                 <td style="vertical-align:top;">
                     <?php $show_pic = ($ast['pic']) ? true : false ;?>
                     <?php if($show_pic){?>
-                    <span class="badge" style="vertical-align:top; margin-top:5px;">
-                        <span class="badge-key">PIC</span><span class="badge-value-primary">{{$ast['pic']}}</span>
-                    </span> 
+                    {{$ast['pic']}}
                     <?php }?>
                 </td>
-                <td style="vertical-align:top; width: 250px;">
+                <td style="vertical-align:top; width: 150px;">
                     <div style="display: flex; justify-content: space-between;">
                         <?php $show_stat = ($ast['status']) ? true : false ;?>
                         <?php if($show_stat){?>
-                        <span class="badge" style="vertical-align:top; margin-top:5px;">
-                            <span class="badge-key">Status</span><span class="badge-value-{{$asset_color[$ast->status]}}">{{$asset_status[$ast->status]}}</span>
-                        </span>
+                        {{$asset_status[$ast->status]}}
                         <?php }?>
+                    </div>
+                </td>
 
-                        
+                <td style="vertical-align:top; width: 150px;">
+                    <div style="display: flex; justify-content: space-between;">
                         <?php $show_loc = ($ast['location']) ? true : false ;?>
                         <?php if($show_loc){?>
-                        <span class="badge" style="vertical-align:top; margin-top:5px;">
-                            <span class="badge-key">Location</span><span class="badge-value-primary">{{$ast['location']}}</span>
-                        </span>
+                        {{$ast['location']}}
                         <?php }?>
                     </div>
                 </td>
