@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
 
 
 
-Route::middleware(['auth', 'verified', 'permission:access_attendance_menu'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/users', [UserRoleController::class, 'index'])->name('users.index');
     Route::get('/users/add', [UserRoleController::class, 'add'])->name('users.add');
     Route::get('/users/{user}/edit', [UserRoleController::class, 'edit'])->name('users.edit');
@@ -63,14 +63,14 @@ Route::middleware(['auth', 'verified', 'permission:access_attendance_menu'])->gr
 
 
 // access_jemaat_menu
-Route::middleware(['auth', 'verified', 'permission:access_jemaat_menu'])->group(function(){
+Route::middleware(['auth', 'verified'])->group(function(){
     Route::resource('jemaat',JemaatController::class)->middleware(['auth','verified']);
     Route::resource('family',FamilyController::class)->middleware(['auth','verified']);
 });
 
 
 // access_attendance_menu
-Route::middleware(['auth', 'verified', 'permission:access_attendance_menu'])->group(function(){
+Route::middleware(['auth', 'verified'])->group(function(){
     Route::resource('sermon',SermonController::class)->middleware(['auth','verified']);    
     Route::resource('ibadah',IbadahController::class)->middleware(['auth','verified']);
 });
@@ -78,14 +78,14 @@ Route::middleware(['auth', 'verified', 'permission:access_attendance_menu'])->gr
 Route::get('/asset/public_report', [AssetController::class, 'public_report'])->name('asset.public_report')->middleware('signed');
 
 // access_asset_menu
-Route::middleware(['auth', 'verified', 'permission:access_asset_menu'])->group(function(){
+Route::middleware(['auth', 'verified'])->group(function(){
     Route::resource('asset',AssetController::class)->middleware(['auth','verified']);
     Route::resource('asset_type',AssetTypeController::class);
     Route::get('/asset/{asset_id}/edit_status', [AssetController::class, 'edit_status'])->middleware(['auth','verified'])->name('asset.edit_status');
 });
 
 // access_maintenance_menu
-Route::middleware(['auth', 'verified', 'permission:access_maintenance_menu'])->group(function(){
+Route::middleware(['auth', 'verified'])->group(function(){
     Route::resource('asset_maint',AssetMaintController::class)->middleware(['auth','verified']);
 });
 

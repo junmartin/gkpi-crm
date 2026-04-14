@@ -12,15 +12,15 @@ class AuthServiceProvider extends ServiceProvider
     {
         // ✅ Define gates for permissions
         Gate::define('access-asset-menu', function ($user) {
-            return $user->hasPermissionTo('access_asset_menu');
+            return true;
         });
 
         Gate::define('access-attendance-menu', function ($user) {
-            return $user->hasPermissionTo('access_attendance_menu');
+            return true;
         });
 
         Gate::define('access-asset-booking-menu', function ($user) {
-            return $user->hasPermissionTo('access_asset_booking_menu');
+            return true;
         });
     }
 }

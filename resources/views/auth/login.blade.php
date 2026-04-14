@@ -5,20 +5,22 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <!-- Username -->
+        <!-- Trigram -->
         <div>
-            <x-input-label for="username" :value="__('Username')" />
-            <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username')" required autofocus autocomplete="username" />
+            <x-input-label for="username" :value="__('Trigram')" />
+            <x-text-input id="username" class="block mt-1 w-full uppercase" type="text" name="username" :value="old('username')" required autofocus autocomplete="username" maxlength="3" placeholder="JMS" />
             <x-input-error :messages="$errors->get('username')" class="mt-2" />
         </div>
 
-        <!-- Password -->
+        <!-- PIN -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" :value="__('PIN')" />
 
             <x-text-input id="password" class="block mt-1 w-full"
                             type="password"
                             name="password"
+                            data-pin-input
+                            maxlength="6"
                             required autocomplete="current-password" />
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
@@ -35,7 +37,7 @@
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
                 <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
+                    {{ __('Forgot your PIN?') }}
                 </a>
             @endif
 

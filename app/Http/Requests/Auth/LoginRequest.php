@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -27,9 +28,16 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => ['required', 'string'],
-            'password' => ['required', 'string'],
+            'username' => ['required', 'string', 'size:'.User::TRIGRAM_LENGTH, 'regex:/^[A-Za-z]{3}$/'],
+            'password' => ['required', 'string', 'regex:'.User::PIN_REGEX],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'username' => User::normalizeTrigram($this->input('username')),
+        ]);
     }
 
     /**
@@ -81,5 +89,13 @@ class LoginRequest extends FormRequest
     public function throttleKey(): string
     {
         return Str::transliterate(Str::lower($this->string('username')).'|'.$this->ip());
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'username' => 'trigram',
+            'password' => 'PIN',
+        ];
     }
 }
