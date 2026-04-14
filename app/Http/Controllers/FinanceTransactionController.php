@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FinanceAccount;
 use App\Models\FinanceAccountMonthlyBalance;
 use App\Models\FinanceBudgetItem;
 use App\Models\FinanceTransaction;
+use App\Support\FinanceProductionData;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -542,17 +545,20 @@ class FinanceTransactionController extends Controller
 
     private static function accountList(): array
     {
-        return [
-            'BCA-0539',
-            'Kas Alfret',
-            'Kas Anne',
-            'Kas Diana',
-            'Kas Jun',
-            'Kas Kimsen',
-            'Kas Lili',
-            'Kas Luna',
-            'Payable',
-        ];
+        if (Schema::hasTable('finance_accounts')) {
+            $accounts = FinanceAccount::query()
+                ->where('is_active', true)
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->pluck('name')
+                ->all();
+
+            if (!empty($accounts)) {
+                return $accounts;
+            }
+        }
+
+        return FinanceProductionData::defaultAccountNames();
     }
 
     private function parseAmount(?string $amount): int
