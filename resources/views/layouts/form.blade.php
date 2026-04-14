@@ -23,6 +23,10 @@
             <a href="{{ route('asset.index')}}">Asset</a> |
             <a href="{{ route('asset_maint.index')}}">Asset Maintenance</a> |
             <a href="{{ route('assetbooking.index')}}">Asset Booking</a> |
+            <a href="{{ route('finance.index')}}">Keuangan</a> |
+            <a href="{{ route('finance.transfer.create')}}">Transfer Akun</a> |
+            <a href="{{ route('finance_budget_item.index')}}">Master Budget</a> |
+            <a href="{{ route('finance.report')}}">Laporan Keuangan</a> |
             <br>
         </div>
         <div>

@@ -13,6 +13,8 @@ use App\Http\Controllers\AssetTypeController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AssetMaintController;
 use App\Http\Controllers\AssetBookingController;
+use App\Http\Controllers\FinanceBudgetItemController;
+use App\Http\Controllers\FinanceTransactionController;
 // use App\Http\Controllers\AssetPhotoController;
 
 use App\Http\Controllers\UserRoleController;
@@ -92,6 +94,15 @@ Route::middleware(['auth', 'verified', 'permission:access_maintenance_menu'])->g
 // access_asset_booking_menu
 Route::middleware(['auth', 'verified'])->group(function(){
     Route::resource('assetbooking',AssetBookingController::class);
+});
+
+Route::middleware(['auth', 'verified'])->group(function(){
+    Route::resource('finance_budget_item', FinanceBudgetItemController::class)->except(['show', 'destroy']);
+    Route::resource('finance', FinanceTransactionController::class)->except(['show', 'destroy']);
+    Route::get('/finance-report', [FinanceTransactionController::class, 'report'])->name('finance.report');
+    Route::post('/finance/{finance}/attachment', [FinanceTransactionController::class, 'storeAttachment'])->name('finance.attachment.store');
+    Route::get('/finance-transfer', [FinanceTransactionController::class, 'createTransfer'])->name('finance.transfer.create');
+    Route::post('/finance-transfer', [FinanceTransactionController::class, 'storeTransfer'])->name('finance.transfer.store');
 });
 
 
