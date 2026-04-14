@@ -637,6 +637,10 @@ class FinanceTransactionController extends Controller
                 'inflow_txn_ids' => $inflowRows->pluck('id')->join(','),
                 'outflow_txn_ids' => $outflowRows->pluck('id')->join(','),
             ];
+        })->filter(function ($row) {
+            return $row['opening_balance'] !== 0
+                || $row['inflow_amount'] !== 0
+                || $row['outflow_amount'] !== 0;
         })->values();
 
         $totals = [

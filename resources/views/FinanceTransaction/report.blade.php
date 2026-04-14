@@ -85,12 +85,52 @@
 @endif
 
 <!-- Filter form -->
+@php
+    $today = now();
+    $monthlyReportPresets = collect([        
+        [
+            'label' => $today->copy()->startOfMonth()->subMonths(2)->format("M'y"),
+            'start_date' => $today->copy()->startOfMonth()->subMonths(2)->startOfMonth()->toDateString(),
+            'end_date' => $today->copy()->startOfMonth()->subMonths(2)->endOfMonth()->toDateString(),
+        ],
+        [
+            'label' => $today->copy()->startOfMonth()->subMonth()->format("M'y"),
+            'start_date' => $today->copy()->startOfMonth()->subMonth()->startOfMonth()->toDateString(),
+            'end_date' => $today->copy()->startOfMonth()->subMonth()->endOfMonth()->toDateString(),
+        ],
+        [
+            'label' => 'Current month-to-date',
+            'start_date' => $today->copy()->startOfMonth()->toDateString(),
+            'end_date' => $today->copy()->toDateString(),
+        ],
+    ])->map(function ($preset) {
+        $preset['active'] = request('start_date') === $preset['start_date']
+            && request('end_date') === $preset['end_date']
+            && blank(request('account'))
+            && blank(request('transaction_type'))
+            && blank(request('budget_item_id'))
+            && blank(request('project'));
+
+        return $preset;
+    });
+@endphp
 <form method="GET" action="{{ route('finance.report') }}">
     <table class="rpt" style="width:auto;">
         <thead>
             <tr><th colspan="6">Report Filter (default: Month To Date)</th></tr>
         </thead>
         <tbody>
+            <tr>
+                <td>Monthly Report</td>
+                <td colspan="5">
+                    @foreach($monthlyReportPresets as $preset)
+                        <a
+                            href="{{ route('finance.report', ['start_date' => $preset['start_date'], 'end_date' => $preset['end_date']]) }}"
+                            style="display:inline-block; margin-right:6px; padding:2px 6px; border:1px solid {{ $preset['active'] ? '#2d72b8' : '#9ab' }}; background:{{ $preset['active'] ? '#dde8f5' : '#f5f9fc' }}; color:#003366; text-decoration:none; border-radius:3px;"
+                        >{{ $preset['label'] }}</a>
+                    @endforeach
+                </td>
+            </tr>
             <tr>
                 <td>Start Date</td>
                 <td><input type="date" name="start_date" value="{{ request('start_date', $startDate) }}"></td>
@@ -183,7 +223,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($accountBalances as $row)
+        @forelse($accountBalances as $row)
             <tr>
                 <td>{{ strtoupper($row['account']) }}</td>
                 <td class="num">{{ $rupiah($row['opening_balance']) }}</td>
@@ -203,7 +243,11 @@
                 </td>
                 <td class="num" style="color:{{ $row['closing_balance'] >= 0 ? '#276221' : '#9c0006' }}">{{ $rupiah(abs($row['closing_balance'])) }}</td>
             </tr>
-        @endforeach
+        @empty
+            <tr>
+                <td colspan="5" style="text-align:center;">No account balances to display for the selected period.</td>
+            </tr>
+        @endforelse
     </tbody>
     <tfoot>
         <tr>
@@ -217,6 +261,77 @@
 </table>
 
 <div class="rpt-split">
+    <!-- Incoming Breakdown -->
+    <div>
+        <h4 class="rpt-section">Matrix: Incoming Breakdown (Persembahan &amp; Sumbangan)</h4>
+        <table class="rpt">
+            <thead>
+                <tr>
+                    <th>Budget Item</th>
+                    <th class="num">Total Incoming</th>
+                    <th class="num">#Txn</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($incomingMatrix as $row)
+                    <tr>
+                        <td>{{ $row['budget_item'] }}</td>
+                        <td class="num">
+                            <a href="javascript:void(0)" class="dl" onclick="showPopup('{{ $row['txn_ids'] }}','{{ addslashes($row['budget_item']) }}')">{!! $fmtInc($row['amount']) !!}</a>
+                        </td>
+                        <td class="num">{{ $row['count'] }}</td>
+                    </tr>
+                @empty
+                    <tr><td colspan="3">No incoming data.</td></tr>
+                @endforelse
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Total</th>
+                    <th class="num">{!! $fmtInc($incomingMatrixTotal) !!}</th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- Budget Item Breakdown -->
+    <div>
+        <h4 class="rpt-section">Matrix: Budget Item Breakdown</h4>
+        <table class="rpt">
+            <thead>
+                <tr>
+                    <th>Budget Item</th>
+                    <th class="num">Expense</th>
+                    <th class="num">#Txn</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($budgetMatrix as $row)
+                    <tr>
+                        <td>{{ $row['budget_item'] }}</td>
+                        <td class="num">
+                            <a href="javascript:void(0)" class="dl" onclick="showPopup('{{ $row['txn_ids'] }}','{{ addslashes($row['budget_item']) }}')">{!! $fmtExp($row['expense']) !!}</a>
+                        </td>
+                        <td class="num">{{ $row['count'] }}</td>
+                    </tr>
+                @empty
+                    <tr><td colspan="3">No data.</td></tr>
+                @endforelse
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Total</th>
+                    <th class="num">{!! $fmtExp($budgetMatrixTotalExpense) !!}</th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+</div>
+
+<div class="rpt-split">    
     <!-- Account Performance -->
     <div>
         <h4 class="rpt-section">Matrix: Account Performance</h4>
@@ -264,76 +379,30 @@
                 </tr>
             </tbody>
         </table>
-    </div>
-
-    <!-- Incoming Breakdown -->
-    <div>
-        <h4 class="rpt-section">Matrix: Incoming Breakdown (Persembahan &amp; Sumbangan)</h4>
-        <table class="rpt">
+        
+        <!-- Top 5 Expenses (Aggregated by Category) -->
+        <h4 class="rpt-section">Top 5 Expenses</h4>
+        <table class="rpt" style="width:auto;">
             <thead>
                 <tr>
                     <th>Budget Item</th>
-                    <th class="num">Total Incoming</th>
+                    <th class="num">Total Expense</th>
                     <th class="num">#Txn</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($incomingMatrix as $row)
+                @forelse($topExpenses as $row)
                     <tr>
                         <td>{{ $row['budget_item'] }}</td>
                         <td class="num">
-                            <a href="javascript:void(0)" class="dl" onclick="showPopup('{{ $row['txn_ids'] }}','{{ addslashes($row['budget_item']) }}')">{!! $fmtInc($row['amount']) !!}</a>
+                            <a href="javascript:void(0)" class="dl" onclick="showPopup('{{ $row['txn_ids'] }}','Top Expense: {{ addslashes($row['budget_item']) }}')">{!! $fmtExp($row['amount']) !!}</a>
                         </td>
                         <td class="num">{{ $row['count'] }}</td>
                     </tr>
                 @empty
-                    <tr><td colspan="3">No incoming data.</td></tr>
+                    <tr><td colspan="3">No expense data.</td></tr>
                 @endforelse
             </tbody>
-            <tfoot>
-                <tr>
-                    <th>Total</th>
-                    <th class="num">{!! $fmtInc($incomingMatrixTotal) !!}</th>
-                    <th></th>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-
-</div>
-
-<div class="rpt-split">
-    <!-- Budget Item Breakdown -->
-    <div>
-        <h4 class="rpt-section">Matrix: Budget Item Breakdown</h4>
-        <table class="rpt">
-            <thead>
-                <tr>
-                    <th>Budget Item</th>
-                    <th class="num">Expense</th>
-                    <th class="num">#Txn</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($budgetMatrix as $row)
-                    <tr>
-                        <td>{{ $row['budget_item'] }}</td>
-                        <td class="num">
-                            <a href="javascript:void(0)" class="dl" onclick="showPopup('{{ $row['txn_ids'] }}','{{ addslashes($row['budget_item']) }}')">{!! $fmtExp($row['expense']) !!}</a>
-                        </td>
-                        <td class="num">{{ $row['count'] }}</td>
-                    </tr>
-                @empty
-                    <tr><td colspan="3">No data.</td></tr>
-                @endforelse
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th>Total</th>
-                    <th class="num">{!! $fmtExp($budgetMatrixTotalExpense) !!}</th>
-                    <th></th>
-                </tr>
-            </tfoot>
         </table>
     </div>
 
@@ -399,30 +468,7 @@
     
 </div>
 
-<!-- Top 5 Expenses (Aggregated by Category) -->
-<h4 class="rpt-section">Top 5 Expenses</h4>
-<table class="rpt" style="width:auto;">
-    <thead>
-        <tr>
-            <th>Budget Item</th>
-            <th class="num">Total Expense</th>
-            <th class="num">#Txn</th>
-        </tr>
-    </thead>
-    <tbody>
-        @forelse($topExpenses as $row)
-            <tr>
-                <td>{{ $row['budget_item'] }}</td>
-                <td class="num">
-                    <a href="javascript:void(0)" class="dl" onclick="showPopup('{{ $row['txn_ids'] }}','Top Expense: {{ addslashes($row['budget_item']) }}')">{!! $fmtExp($row['amount']) !!}</a>
-                </td>
-                <td class="num">{{ $row['count'] }}</td>
-            </tr>
-        @empty
-            <tr><td colspan="3">No expense data.</td></tr>
-        @endforelse
-    </tbody>
-</table>
+
 
 <!-- Transaction History -->
 <h4 class="rpt-section">Transaction History</h4>
