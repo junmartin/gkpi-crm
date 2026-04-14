@@ -32,15 +32,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () { 
-    $numberOfSermons = 5; // Define how many sermons back to display
-    $attd = Sermon::withAttendance($numberOfSermons)->get();
+Route::view('/homepage', 'homepage')
+    ->middleware(['auth', 'verified'])
+    ->name('homepage');
 
-    $jemaat_by_gender = Jemaat::GroupByGender()->get();
-    $jemaat_by_age = Jemaat::groupByAgeCategory()->get();
-
-    return view('dashboard',compact('attd','jemaat_by_gender','jemaat_by_age'));
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::redirect('/dashboard', '/homepage')
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

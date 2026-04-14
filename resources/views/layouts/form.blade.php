@@ -15,6 +15,7 @@
         <div>            
             <img src="{{ asset('storage/logo-gereja.png') }}" style="width:45px;"/>
             <b>Menu : </b>
+            <a href="{{ route('homepage') }}">Homepage</a> |
             <a href="{{ route('jemaat.index')}}">Jemaat</a> |
             <a href="{{ route('family.index')}}">Family</a> |
             <a href="{{ route('ibadah.index')}}">Ibadah</a> |
