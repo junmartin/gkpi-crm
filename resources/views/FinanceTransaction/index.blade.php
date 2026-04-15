@@ -106,7 +106,7 @@
                 <td>{{ strtoupper($trx->account) }}</td>
                 <td>{{ optional($trx->budgetItem)->name ?? '-' }}</td>
                 <td class="num">
-                    @if($trx->isInternalTransfer() || $trx->isOpeningBalance())
+                    @if($trx->isOpeningBalance())
                         {!! $fmtNeutral($trx->amount) !!}
                     @elseif($trx->transaction_type === 'expense')
                         {!! $fmtExp($trx->amount) !!}

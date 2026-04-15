@@ -492,7 +492,7 @@
                 <td>{{ strtoupper($trx->account) }}</td>
                 <td>{{ optional($trx->budgetItem)->name ?? '-' }}</td>
                 <td class="num">
-                    @if($trx->isInternalTransfer() || $trx->isOpeningBalance())
+                    @if($trx->isOpeningBalance())
                         {!! $fmtNeutral($trx->amount) !!}
                     @elseif($trx->transaction_type === 'expense')
                         {!! $fmtExp($trx->amount) !!}
@@ -550,7 +550,7 @@
         /* ---- Rupiah formatter ---- */
         function rupiah(v) { return 'Rp\u00a0' + parseInt(v).toLocaleString('id-ID'); }
         function fmt(type, amount, isTransfer, isOpeningBalance) {
-            if (isTransfer || isOpeningBalance) return '<span style="color:#444444">' + rupiah(amount) + '</span>';
+            if (isOpeningBalance) return '<span style="color:#444444">' + rupiah(amount) + '</span>';
             if (type === 'expense') return '<span style="color:#cc0000">-' + rupiah(amount) + '</span>';
             return '<span style="color:#0000cc">' + rupiah(amount) + '</span>';
         }
