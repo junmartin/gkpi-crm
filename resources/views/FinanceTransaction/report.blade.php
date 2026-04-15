@@ -60,17 +60,27 @@
     .pill-warn  { background: #ffeb9c; color: #9c5700; }
     .pill-danger{ background: #ffc7ce; color: #9c0006; }
 
+    /* Keep table styling, but allow horizontal scroll on small screens */
+    .rpt-table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .rpt-table-scroll > table { min-width: max-content; }
+
     /* Upload box */
     .upload-wrap { border: 1px dashed #7a9ec0; border-radius: 4px; padding: 5px; background: #f5f9fc; margin-top: 3px; }
     .upload-wrap.dragover { background: #dde8f5; border-color: #2d72b8; }
 
     /* Popup modal */
-    #rpt-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:9999; overflow:auto; }
-    #rpt-modal-box { background:#fff; margin:40px auto; max-width:960px; min-width:400px; border:1px solid #9ab; font:8pt Tahoma,Arial; }
+    #rpt-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:9999; overflow:auto; align-items:center; justify-content:center; padding:12px; }
+    #rpt-modal-box { background:#fff; width:min(960px, calc(100vw - 24px)); border:1px solid #9ab; font:8pt Tahoma,Arial; }
     #rpt-modal-head { background:#E5F0FC; padding:5px 8px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #b0c4d8; }
     #rpt-modal-head strong { font: bold 10pt Tahoma, Arial; }
     #rpt-modal-close { cursor:pointer; font:bold 11pt Tahoma,Arial; color:#333; border:none; background:none; padding:0 4px; }
     #rpt-modal-body { padding:6px 8px; max-height:65vh; overflow-y:auto; }
+
+    @media (max-width: 640px) {
+        #rpt-modal { padding:8px; }
+        #rpt-modal-box { width: calc(100vw - 16px); }
+        #rpt-modal-body { max-height: 72vh; }
+    }
 
     /* Drill-down link */
     a.dl { color:#0055cc; text-decoration:underline; cursor:pointer; }
@@ -544,6 +554,18 @@
 @section('script')
     <script>
     (function () {
+        function wrapTablesForMobile() {
+            document.querySelectorAll('table.rpt, table.kpi').forEach(function (table) {
+                if (table.parentElement && table.parentElement.classList.contains('rpt-table-scroll')) return;
+                const wrapper = document.createElement('div');
+                wrapper.className = 'rpt-table-scroll';
+                table.parentNode.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            });
+        }
+
+        wrapTablesForMobile();
+
         /* ---- Transaction data ---- */
         const TXN = @json($txnJson);
 
@@ -577,10 +599,14 @@
                 '<th>Date</th><th>Account</th><th>Budget Item</th>' +
                 '<th style="text-align:right;">Amount</th><th>Description</th><th>Project</th>' +
                 '</tr></thead><tbody>' + tbody + '</tbody>';
-            document.getElementById('rpt-modal').style.display = 'block';
+            document.getElementById('rpt-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
         };
 
-        function closeModal() { document.getElementById('rpt-modal').style.display = 'none'; }
+        function closeModal() {
+            document.getElementById('rpt-modal').style.display = 'none';
+            document.body.style.overflow = '';
+        }
         document.getElementById('rpt-modal-close').addEventListener('click', closeModal);
         document.getElementById('rpt-modal').addEventListener('click', function (e) { if (e.target === this) closeModal(); });
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
