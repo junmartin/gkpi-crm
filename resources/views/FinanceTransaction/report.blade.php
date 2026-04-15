@@ -69,12 +69,13 @@
     .upload-wrap.dragover { background: #dde8f5; border-color: #2d72b8; }
 
     /* Popup modal */
-    #rpt-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:9999; overflow:auto; align-items:center; justify-content:center; padding:12px; }
-    #rpt-modal-box { background:#fff; width:min(960px, calc(100vw - 24px)); border:1px solid #9ab; font:8pt Tahoma,Arial; }
+    #rpt-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:9999; overflow:auto; align-items:center; justify-content:center; padding:12px; box-sizing:border-box; }
+    #rpt-modal-box { background:#fff; width:min(960px, calc(100vw - 24px)); max-width:calc(100vw - 24px); border:1px solid #9ab; font:8pt Tahoma,Arial; box-sizing:border-box; }
     #rpt-modal-head { background:#E5F0FC; padding:5px 8px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #b0c4d8; }
     #rpt-modal-head strong { font: bold 10pt Tahoma, Arial; }
     #rpt-modal-close { cursor:pointer; font:bold 11pt Tahoma,Arial; color:#333; border:none; background:none; padding:0 4px; }
-    #rpt-modal-body { padding:6px 8px; max-height:65vh; overflow-y:auto; }
+    #rpt-modal-body { padding:6px 8px; max-height:65vh; overflow:auto; }
+    #rpt-modal-body .rpt-table-scroll { max-width:100%; }
 
     @media (max-width: 640px) {
         #rpt-modal { padding:8px; }
@@ -554,6 +555,23 @@
 @section('script')
     <script>
     (function () {
+        function lockMobileViewport() {
+            const viewportValue = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';
+            let viewportMeta = document.querySelector('meta[name="viewport"]');
+            if (!viewportMeta) {
+                viewportMeta = document.createElement('meta');
+                viewportMeta.setAttribute('name', 'viewport');
+                document.head.appendChild(viewportMeta);
+            }
+            viewportMeta.setAttribute('content', viewportValue);
+            document.documentElement.style.webkitTextSizeAdjust = '100%';
+            document.documentElement.style.textSizeAdjust = '100%';
+            document.body.style.webkitTextSizeAdjust = '100%';
+            document.body.style.textSizeAdjust = '100%';
+        }
+
+        lockMobileViewport();
+
         function wrapTablesForMobile() {
             document.querySelectorAll('table.rpt, table.kpi').forEach(function (table) {
                 if (table.parentElement && table.parentElement.classList.contains('rpt-table-scroll')) return;
