@@ -98,6 +98,7 @@ Route::middleware(['auth', 'verified'])->group(function(){
     Route::resource('finance_budget_item', FinanceBudgetItemController::class)->except(['show', 'destroy']);
     Route::resource('finance', FinanceTransactionController::class)->except(['show', 'destroy']);
     Route::get('/finance-report', [FinanceTransactionController::class, 'report'])->name('finance.report');
+    Route::get('/finance/{finance}/attachment-view', [FinanceTransactionController::class, 'viewAttachment'])->name('finance.attachment.view');
     Route::post('/finance/{finance}/attachment', [FinanceTransactionController::class, 'storeAttachment'])->name('finance.attachment.store');
     Route::get('/finance-transfer', [FinanceTransactionController::class, 'createTransfer'])->name('finance.transfer.create');
     Route::post('/finance-transfer', [FinanceTransactionController::class, 'storeTransfer'])->name('finance.transfer.store');

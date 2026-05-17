@@ -86,6 +86,14 @@
     /* Drill-down link */
     a.dl { color:#0055cc; text-decoration:underline; cursor:pointer; }
     a.dl:hover { color:#003399; }
+
+    /* Attachment viewer */
+    .attach-viewer { display:inline-flex; align-items:center; gap:4px; }
+    .attach-nav { background:#E5F0FC; border:1px solid #9ab; border-radius:2px; padding:2px 4px; cursor:pointer; font-size:8pt; color:#003366; text-decoration:none; }
+    .attach-nav:hover { background:#dde8f5; }
+    .attach-nav:disabled { color:#999; cursor:not-allowed; }
+    .attach-preview { display:inline-block; max-width:100px; max-height:60px; border:1px solid #ccc; border-radius:2px; }
+    .attach-count { font-size:7.5pt; color:#666; }
 </style>
 
 <div class="rpt-wrap">
@@ -515,7 +523,17 @@
                 <td>{{ $trx->project }}</td>
                 <td>
                     @if($trx->attachment_path)
-                        <a href="{{ asset('storage/' . $trx->attachment_path) }}" target="_blank">[View]</a>
+                        @php
+                            $attachments = [];
+                            if (str_starts_with($trx->attachment_path, '[')) {
+                                $attachments = json_decode($trx->attachment_path, true) ?? [];
+                            } else {
+                                $attachments = [$trx->attachment_path];
+                            }
+                        @endphp
+                        @if(count($attachments) > 0)
+                            <a href="{{ route('finance.attachment.view', ['finance' => $trx->id, 'i' => 0]) }}" target="_blank">[View]</a>
+                        @endif
                     @else
                         <a href="javascript:void(0)" class="attach-toggle" data-target="attach-box-{{ $trx->id }}">[+ Attach]</a>
                         <div id="attach-box-{{ $trx->id }}" style="display:none; margin-top:3px;">
@@ -523,7 +541,7 @@
                                 @csrf
                                 <div class="upload-wrap" data-drop="drop-{{ $trx->id }}">
                                     Drop file here or click to choose.
-                                    <input id="drop-{{ $trx->id }}" type="file" name="attachment" accept="application/pdf,image/*" capture="environment" required>
+                                    <input id="drop-{{ $trx->id }}" type="file" name="attachment[]" accept="application/pdf,image/*" capture="environment" required multiple>
                                 </div>
                                 <button type="submit" style="margin-top:3px;">Upload</button>
                             </form>
@@ -600,26 +618,95 @@
             if (!idsStr) return;
             const ids = new Set(idsStr.split(',').map(Number).filter(Boolean));
             const rows = TXN.filter(t => ids.has(t.id));
-            const tbody = rows.map(t =>
-                '<tr>' +
+            const tbody = rows.map(t => {
+                let attachmentCell = '-';
+                if (t.attachments && t.attachments.length > 0) {
+                    const attachId = 'attach-' + t.id;
+                    attachmentCell = '<div class="attach-viewer" id="' + attachId + '">' +
+                        '<a class="attach-nav prev-attach" href="javascript:void(0)" data-trx="' + t.id + '" title="Previous">‹</a>' +
+                        '<a class="attach-link" href="javascript:void(0)" data-trx="' + t.id + '" data-idx="0" target="_blank" style="color:#0055cc; text-decoration:underline; cursor:pointer;">[View]</a>' +
+                        '<a class="attach-nav next-attach" href="javascript:void(0)" data-trx="' + t.id + '" title="Next">›</a>' +
+                        '<span class="attach-count" data-trx="' + t.id + '">1 of ' + t.attachments.length + '</span>' +
+                        '</div>';
+                }
+                return '<tr>' +
                 '<td>' + t.date + '</td>' +
                 '<td>' + t.account.toUpperCase() + '</td>' +
                 '<td>' + (t.item || '-') + '</td>' +
                 '<td style="text-align:right;">' + fmt(t.type, t.amount, t.is_transfer, t.is_opening_balance) + '</td>' +
                 '<td>' + (t.desc || '') + '</td>' +
                 '<td>' + (t.project || '') + '</td>' +
-                '</tr>'
-            ).join('');
+                '<td>' + attachmentCell + '</td>' +
+                '</tr>';
+            }).join('');
 
             document.getElementById('rpt-modal-title').textContent = title + ' (' + rows.length + ' records)';
             document.getElementById('rpt-modal-table').innerHTML =
                 '<thead><tr>' +
                 '<th>Date</th><th>Account</th><th>Budget Item</th>' +
-                '<th style="text-align:right;">Amount</th><th>Description</th><th>Project</th>' +
+                '<th style="text-align:right;">Amount</th><th>Description</th><th>Project</th><th>Attachment</th>' +
                 '</tr></thead><tbody>' + tbody + '</tbody>';
+            
+            // Setup attachment navigation
+            setupAttachmentNav(rows);
+            
             document.getElementById('rpt-modal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         };
+
+        // Helper to setup attachment navigation
+        function setupAttachmentNav(rows) {
+            const attachmentMap = {};
+            rows.forEach(t => {
+                if (t.attachments && t.attachments.length > 0) {
+                    attachmentMap[t.id] = { current: 0, attachments: t.attachments };
+                }
+            });
+
+            document.querySelectorAll('.prev-attach').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const trxId = parseInt(this.dataset.trx);
+                    if (attachmentMap[trxId]) {
+                        attachmentMap[trxId].current = (attachmentMap[trxId].current - 1 + attachmentMap[trxId].attachments.length) % attachmentMap[trxId].attachments.length;
+                        updateAttachmentView(trxId, attachmentMap);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.next-attach').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const trxId = parseInt(this.dataset.trx);
+                    if (attachmentMap[trxId]) {
+                        attachmentMap[trxId].current = (attachmentMap[trxId].current + 1) % attachmentMap[trxId].attachments.length;
+                        updateAttachmentView(trxId, attachmentMap);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.attach-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const trxId = parseInt(this.dataset.trx);
+                    if (attachmentMap[trxId]) {
+                        const currentIndex = attachmentMap[trxId].current;
+                        const url = '/finance/' + trxId + '/attachment-view?i=' + currentIndex;
+                        window.open(url, '_blank');
+                    }
+                });
+            });
+        }
+
+        // Helper to update attachment view
+        function updateAttachmentView(trxId, attachmentMap) {
+            if (!attachmentMap[trxId]) return;
+            const data = attachmentMap[trxId];
+            document.querySelector('.attach-count[data-trx="' + trxId + '"]').textContent = 
+                (data.current + 1) + ' of ' + data.attachments.length;
+            document.querySelector('.attach-link[data-trx="' + trxId + '"]').dataset.idx = data.current;
+        }
+
 
         function closeModal() {
             document.getElementById('rpt-modal').style.display = 'none';

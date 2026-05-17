@@ -404,18 +404,31 @@ class FinanceTransactionController extends Controller
         $expenseAllIds  = $operationalTransactions->where('transaction_type', 'expense')->pluck('id')->join(',');
         $allIds         = $transactions->pluck('id')->join(',');
 
-        $txnJson = $transactions->map(fn ($t) => [
-            'id'      => $t->id,
-            'date'    => $t->trx_date->format('d M Y'),
-            'type'    => $t->transaction_type,
-            'account' => $t->account,
-            'item'    => (string) optional($t->budgetItem)->name,
-            'amount'  => (int) $t->amount,
-            'desc'    => (string) $t->description,
-            'project' => (string) $t->project,
-            'is_transfer' => $this->isInternalTransfer($t),
-            'is_opening_balance' => $this->isOpeningBalance($t),
-        ])->values();
+        $txnJson = $transactions->map(function ($t) {
+            $attachments = [];
+            if ($t->attachment_path) {
+                // Handle JSON array format
+                if (str_starts_with($t->attachment_path, '[')) {
+                    $attachments = json_decode($t->attachment_path, true) ?? [];
+                } else {
+                    // Handle single path format (backward compatibility)
+                    $attachments = [$t->attachment_path];
+                }
+            }
+            return [
+                'id'      => $t->id,
+                'date'    => $t->trx_date->format('d M Y'),
+                'type'    => $t->transaction_type,
+                'account' => $t->account,
+                'item'    => (string) optional($t->budgetItem)->name,
+                'amount'  => (int) $t->amount,
+                'desc'    => (string) $t->description,
+                'project' => (string) $t->project,
+                'is_transfer' => $this->isInternalTransfer($t),
+                'is_opening_balance' => $this->isOpeningBalance($t),
+                'attachments' => $attachments,
+            ];
+        })->values();
 
         return view('FinanceTransaction.report', compact(
             'transactions',
@@ -512,21 +525,73 @@ class FinanceTransactionController extends Controller
     public function storeAttachment(Request $request, FinanceTransaction $finance)
     {
         $validated = $request->validate([
-            'attachment' => 'required|file|mimes:pdf,jpg,jpeg,png,webp|max:5120',
+            'attachment' => 'required|array',
+            'attachment.*' => 'required|file|mimes:pdf,jpg,jpeg,png,webp|max:5120',
         ]);
 
-        if ($finance->attachment_path && Storage::disk('public')->exists($finance->attachment_path)) {
-            Storage::disk('public')->delete($finance->attachment_path);
+        // Get existing attachments
+        $existingAttachments = [];
+        if ($finance->attachment_path) {
+            if (str_starts_with($finance->attachment_path, '[')) {
+                $existingAttachments = json_decode($finance->attachment_path, true) ?? [];
+            } else {
+                $existingAttachments = [$finance->attachment_path];
+            }
         }
 
-        $path = $request->file('attachment')->store('finance/attachments', 'public');
+        // Process new files
+        $newAttachments = [];
+        foreach ($request->file('attachment') as $file) {
+            $path = $file->store('finance/attachments', 'public');
+            $newAttachments[] = $path;
+        }
+
+        // Combine existing and new attachments
+        $allAttachments = array_merge($existingAttachments, $newAttachments);
 
         $finance->update([
-            'attachment_path' => $path,
+            'attachment_path' => json_encode($allAttachments),
             'update_by' => auth()->id(),
         ]);
 
         return back()->with('success', 'Attachment berhasil diunggah.');
+    }
+
+    public function viewAttachment(Request $request, FinanceTransaction $finance)
+    {
+        $attachments = [];
+        if ($finance->attachment_path) {
+            if (str_starts_with($finance->attachment_path, '[')) {
+                $attachments = json_decode($finance->attachment_path, true) ?? [];
+            } else {
+                $attachments = [$finance->attachment_path];
+            }
+        }
+
+        if (empty($attachments)) {
+            abort(404);
+        }
+
+        $total = count($attachments);
+        $requestedIndex = (int) $request->query('i', 0);
+        $index = (($requestedIndex % $total) + $total) % $total;
+
+        $prevIndex = ($index - 1 + $total) % $total;
+        $nextIndex = ($index + 1) % $total;
+        $currentPath = $attachments[$index];
+        $extension = strtolower(pathinfo($currentPath, PATHINFO_EXTENSION));
+        $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'webp'], true);
+
+        return view('FinanceTransaction.attachment_viewer', [
+            'finance' => $finance,
+            'attachments' => $attachments,
+            'index' => $index,
+            'prevIndex' => $prevIndex,
+            'nextIndex' => $nextIndex,
+            'total' => $total,
+            'currentPath' => $currentPath,
+            'isImage' => $isImage,
+        ]);
     }
 
     private function validateTransaction(Request $request): array
