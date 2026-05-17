@@ -116,10 +116,22 @@ class FinanceTransactionController extends Controller
 
         $attachmentPath = $finance->attachment_path;
         if ($request->hasFile('attachment')) {
-            if ($attachmentPath && Storage::disk('public')->exists($attachmentPath)) {
-                Storage::disk('public')->delete($attachmentPath);
+            $existingAttachments = [];
+            if ($attachmentPath) {
+                if (str_starts_with($attachmentPath, '[')) {
+                    $existingAttachments = json_decode($attachmentPath, true) ?? [];
+                } else {
+                    $existingAttachments = [$attachmentPath];
+                }
             }
-            $attachmentPath = $request->file('attachment')->store('finance/attachments', 'public');
+
+            $newAttachments = [];
+            foreach ($request->file('attachment') as $file) {
+                $newAttachments[] = $file->store('finance/attachments', 'public');
+            }
+
+            $allAttachments = array_merge($existingAttachments, $newAttachments);
+            $attachmentPath = !empty($allAttachments) ? json_encode($allAttachments) : null;
         }
 
         $finance->update([
@@ -608,7 +620,8 @@ class FinanceTransactionController extends Controller
             'amount' => 'required|string|max:30',
             'description' => 'nullable|string',
             'project' => 'nullable|string|max:255',
-            'attachment' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:5120',
+            'attachment' => 'nullable|array',
+            'attachment.*' => 'required|file|mimes:pdf,jpg,jpeg,png,webp|max:5120',
         ]);
     }
 

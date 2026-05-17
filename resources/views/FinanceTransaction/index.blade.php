@@ -118,7 +118,7 @@
                 <td>{{ $trx->project }}</td>
                 <td>
                     @if($trx->attachment_path)
-                        <a href="{{ asset('storage/' . $trx->attachment_path) }}" target="_blank">[View]</a>
+                        <a href="{{ route('finance.attachment.view', ['finance' => $trx->id, 'i' => 0]) }}" target="_blank">[View]</a>
                     @else
                         -
                     @endif

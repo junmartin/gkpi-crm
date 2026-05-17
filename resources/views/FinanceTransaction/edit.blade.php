@@ -74,10 +74,10 @@
             <td style="padding:6px;">Attachment (optional)</td>
             <td style="padding:6px;">
                 @if($transaction->attachment_path)
-                    <a href="{{ asset('storage/' . $transaction->attachment_path) }}" target="_blank">[ View Existing Attachment ]</a><br>
+                    <a href="{{ route('finance.attachment.view', ['finance' => $transaction->id, 'i' => 0]) }}" target="_blank">[ View Existing Attachment ]</a><br>
                 @endif
-                <input type="file" name="attachment" accept="application/pdf,image/*" capture="environment">
-                <small>Accepted: PDF, JPG, JPEG, PNG, WEBP (max 5MB)</small>
+                <input type="file" name="attachment[]" accept="application/pdf,image/*" capture="environment" multiple>
+                <small>Accepted: PDF, JPG, JPEG, PNG, WEBP (max 5MB each)</small>
             </td>
         </tr>
     </table>
