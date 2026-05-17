@@ -75,8 +75,8 @@
         <tr>
             <td style="padding:6px;">Attachment (optional)</td>
             <td style="padding:6px;">
-                <input type="file" name="attachment" accept="application/pdf,image/*" capture="environment">
-                <small>Accepted: PDF, JPG, JPEG, PNG, WEBP (max 5MB)</small>
+                <input type="file" name="attachment[]" accept="application/pdf,image/*" capture="environment" multiple>
+                <small>Accepted: PDF, JPG, JPEG, PNG, WEBP (max 5MB each)</small>
             </td>
         </tr>
     </table>

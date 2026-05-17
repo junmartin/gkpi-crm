@@ -61,7 +61,7 @@ class FinanceTransactionController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $this->validateTransaction($request);
+        $validated = $this->validateTransactionForCreate($request);
         $amount = $this->parseAmount($validated['amount']);
 
         if ($amount <= 0) {
@@ -70,7 +70,11 @@ class FinanceTransactionController extends Controller
 
         $attachmentPath = null;
         if ($request->hasFile('attachment')) {
-            $attachmentPath = $request->file('attachment')->store('finance/attachments', 'public');
+            $attachmentPaths = [];
+            foreach ($request->file('attachment') as $file) {
+                $attachmentPaths[] = $file->store('finance/attachments', 'public');
+            }
+            $attachmentPath = !empty($attachmentPaths) ? json_encode($attachmentPaths) : null;
         }
 
         FinanceTransaction::create([
@@ -605,6 +609,21 @@ class FinanceTransactionController extends Controller
             'description' => 'nullable|string',
             'project' => 'nullable|string|max:255',
             'attachment' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:5120',
+        ]);
+    }
+
+    private function validateTransactionForCreate(Request $request): array
+    {
+        return $request->validate([
+            'trx_date' => 'required|date',
+            'transaction_type' => 'required|in:income,expense',
+            'account' => 'required|string|max:100',
+            'budget_item_id' => 'required|exists:finance_budget_items,id',
+            'amount' => 'required|string|max:30',
+            'description' => 'nullable|string',
+            'project' => 'nullable|string|max:255',
+            'attachment' => 'nullable|array',
+            'attachment.*' => 'required|file|mimes:pdf,jpg,jpeg,png,webp|max:5120',
         ]);
     }
 
