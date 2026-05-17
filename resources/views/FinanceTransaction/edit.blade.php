@@ -73,9 +73,48 @@
         <tr>
             <td style="padding:6px;">Attachment (optional)</td>
             <td style="padding:6px;">
+                @php
+                    $attachments = [];
+                    if ($transaction->attachment_path) {
+                        if (str_starts_with($transaction->attachment_path, '[')) {
+                            $attachments = json_decode($transaction->attachment_path, true) ?? [];
+                        } else {
+                            $attachments = [$transaction->attachment_path];
+                        }
+                    }
+                @endphp
                 @if($transaction->attachment_path)
                     <a href="{{ route('finance.attachment.view', ['finance' => $transaction->id, 'i' => 0]) }}" target="_blank">[ View Existing Attachment ]</a><br>
                 @endif
+
+                @if(!empty($attachments))
+                    <div style="display:flex; flex-wrap:wrap; gap:8px; margin:8px 0;">
+                        @foreach($attachments as $idx => $path)
+                            @php
+                                $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+                                $isImage = in_array($ext, ['jpg', 'jpeg', 'png', 'webp'], true);
+                            @endphp
+                            <div style="border:1px solid #ccc; padding:6px; width:140px; background:#fafafa;">
+                                <div style="height:90px; display:flex; align-items:center; justify-content:center; background:#fff; border:1px solid #ddd; margin-bottom:6px; overflow:hidden;">
+                                    @if($isImage)
+                                        <img src="{{ asset('storage/' . $path) }}" alt="Attachment {{ $idx + 1 }}" style="max-width:100%; max-height:100%; object-fit:cover;">
+                                    @else
+                                        <span style="font: bold 8pt Tahoma, Arial; color:#666;">{{ strtoupper($ext ?: 'FILE') }}</span>
+                                    @endif
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; gap:4px;">
+                                    <a href="{{ route('finance.attachment.view', ['finance' => $transaction->id, 'i' => $idx]) }}" target="_blank">[View]</a>
+                                    <form method="POST" action="{{ route('finance.attachment.delete', ['finance' => $transaction->id, 'index' => $idx]) }}" onsubmit="return confirm('Delete this attachment?');" style="margin:0;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" style="font:8pt Tahoma, Arial;">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+
                 <input type="file" name="attachment[]" accept="application/pdf,image/*" capture="environment" multiple>
                 <small>Accepted: PDF, JPG, JPEG, PNG, WEBP (max 5MB each)</small>
             </td>

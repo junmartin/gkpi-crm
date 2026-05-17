@@ -573,6 +573,37 @@ class FinanceTransactionController extends Controller
         return back()->with('success', 'Attachment berhasil diunggah.');
     }
 
+    public function deleteAttachment(FinanceTransaction $finance, int $index)
+    {
+        $attachments = [];
+        if ($finance->attachment_path) {
+            if (str_starts_with($finance->attachment_path, '[')) {
+                $attachments = json_decode($finance->attachment_path, true) ?? [];
+            } else {
+                $attachments = [$finance->attachment_path];
+            }
+        }
+
+        if (!array_key_exists($index, $attachments)) {
+            return back()->withErrors(['attachment' => 'Lampiran tidak ditemukan.']);
+        }
+
+        $pathToDelete = $attachments[$index];
+        if ($pathToDelete && Storage::disk('public')->exists($pathToDelete)) {
+            Storage::disk('public')->delete($pathToDelete);
+        }
+
+        unset($attachments[$index]);
+        $attachments = array_values($attachments);
+
+        $finance->update([
+            'attachment_path' => !empty($attachments) ? json_encode($attachments) : null,
+            'update_by' => auth()->id(),
+        ]);
+
+        return back()->with('success', 'Attachment berhasil dihapus.');
+    }
+
     public function viewAttachment(Request $request, FinanceTransaction $finance)
     {
         $attachments = [];
