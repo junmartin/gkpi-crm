@@ -104,11 +104,12 @@
                                 </div>
                                 <div style="display:flex; justify-content:space-between; align-items:center; gap:4px;">
                                     <a href="{{ route('finance.attachment.view', ['finance' => $transaction->id, 'i' => $idx]) }}" target="_blank">[View]</a>
-                                    <form method="POST" action="{{ route('finance.attachment.delete', ['finance' => $transaction->id, 'index' => $idx]) }}" onsubmit="return confirm('Delete this attachment?');" style="margin:0;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" style="font:8pt Tahoma, Arial;">Delete</button>
-                                    </form>
+                                    <button
+                                        type="submit"
+                                        form="delete-attachment-{{ $transaction->id }}-{{ $idx }}"
+                                        onclick="return confirm('Delete this attachment?');"
+                                        style="font:8pt Tahoma, Arial;"
+                                    >Delete</button>
                                 </div>
                             </div>
                         @endforeach
@@ -125,6 +126,20 @@
         <input type="submit" value="Update">
     </div>
 </form>
+
+@if(!empty($attachments))
+    @foreach($attachments as $idx => $path)
+        <form
+            id="delete-attachment-{{ $transaction->id }}-{{ $idx }}"
+            method="POST"
+            action="{{ route('finance.attachment.delete', ['finance' => $transaction->id, 'index' => $idx]) }}"
+            style="display:none;"
+        >
+            @csrf
+            @method('DELETE')
+        </form>
+    @endforeach
+@endif
 @endsection
 
 @section('script')

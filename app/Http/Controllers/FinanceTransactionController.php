@@ -583,6 +583,8 @@ class FinanceTransactionController extends Controller
                 $attachments = [$finance->attachment_path];
             }
         }
+        // Always reindex to ensure keys are 0,1,2,...
+        $attachments = array_values($attachments);
 
         if (!array_key_exists($index, $attachments)) {
             return back()->withErrors(['attachment' => 'Lampiran tidak ditemukan.']);
